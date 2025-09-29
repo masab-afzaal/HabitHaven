@@ -21,7 +21,17 @@ export const prayerService = {
       const result = await response.json();
       
       if (response.ok) {
-        return { success: true, data: result.data };
+        // Normalize the response data to match expected field names
+        const prayerData = result.message || result.data || [];
+        const normalizedData = Array.isArray(prayerData) ? prayerData.map(prayer => ({
+          _id: prayer._id || prayer.id,
+          prayerName: prayer.prayerName || prayer.name || prayer.prayer_name || prayer.type,
+          isCompleted: prayer.isCompleted || prayer.completed || prayer.is_completed || false,
+          completedAt: prayer.completedAt || prayer.completed_at || prayer.completionTime,
+          date: prayer.date || prayer.prayer_date || new Date().toISOString().split('T')[0]
+        })) : [];
+        
+        return { success: true, data: normalizedData };
       } else {
         return { success: false, error: result.message || 'Failed to log prayers' };
       }
@@ -45,7 +55,17 @@ export const prayerService = {
       const result = await response.json();
       
       if (response.ok) {
-        return { success: true, data: result.data };
+        // Normalize the response data to match expected field names
+        const prayerData = result.message || result.data || [];
+        const normalizedData = Array.isArray(prayerData) ? prayerData.map(prayer => ({
+          _id: prayer._id || prayer.id,
+          prayerName: prayer.prayerName || prayer.name || prayer.prayer_name || prayer.type,
+          isCompleted: prayer.isCompleted || prayer.completed || prayer.is_completed || false,
+          completedAt: prayer.completedAt || prayer.completed_at || prayer.completionTime,
+          date: prayer.date || prayer.prayer_date || new Date().toISOString().split('T')[0]
+        })) : [];
+        
+        return { success: true, data: normalizedData };
       } else if (response.status === 404) {
         return { success: false, error: 'No prayers found for today', needsCreation: true };
       } else {
@@ -57,10 +77,18 @@ export const prayerService = {
     }
   },
 
-  // POST /api/v1/prayer/:prayerId/complete - Mark prayer as completed
-  // This also handles rewards, XP, leveling, streaks, and badges automatically
-  markPrayerCompleted: async (token, prayerId) => {
+  // POST /api/v1/prayer/:prayerId/complete - Toggle prayer completion status
+  // This toggles is_completed between true/false and handles rewards, XP, leveling, streaks, and badges automatically
+  togglePrayerStatus: async (token, prayerId) => {
     try {
+      // Validate inputs
+      if (!token) {
+        return { success: false, error: 'Authentication token is required' };
+      }
+      if (!prayerId) {
+        return { success: false, error: 'Prayer ID is required' };
+      }
+
       const response = await fetch(`${API_BASE}/prayer/${prayerId}/complete`, {
         method: 'POST',
         headers: {
@@ -69,16 +97,22 @@ export const prayerService = {
         }
       });
       
+      if (!response) {
+        return { success: false, error: 'No response received from server' };
+      }
+
       const result = await response.json();
       
       if (response.ok) {
-        return { success: true, data: result.data };
+        // Handle backend response structure - data might be in 'message' or 'data' field
+        const responseData = result.message || result.data || result;
+        return { success: true, data: responseData };
       } else {
         return { success: false, error: result.message || 'Failed to mark prayer as completed' };
       }
     } catch (error) {
       console.error('Error marking prayer completed:', error);
-      return { success: false, error: 'Network error' };
+      return { success: false, error: error.message || 'Network error' };
     }
   }
 };

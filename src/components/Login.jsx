@@ -64,6 +64,7 @@ const Login = ({ onBack, onRegisterClick }) => {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
         py: 4
       }}
     >

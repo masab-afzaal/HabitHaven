@@ -135,6 +135,12 @@ const TaskComponent = () => {
     try {
       let result;
       if (editingTask) {
+        // Validate editing task has an ID
+        if (!editingTask._id) {
+          setError('Task ID is missing for update');
+          setLoading(false);
+          return;
+        }
         result = await taskService.updateTask(token, editingTask._id, formData);
       } else {
         result = await taskService.createTask(token, formData);
@@ -184,6 +190,12 @@ const TaskComponent = () => {
   // Toggle task completion
   const toggleComplete = async (taskId, currentStatus) => {
     try {
+      // Validate taskId
+      if (!taskId) {
+        setError('Task ID is missing');
+        return;
+      }
+
       const result = await taskService.markTaskComplete(token, taskId, !currentStatus);
       if (result.success) {
         await fetchTasks();
@@ -502,13 +514,13 @@ const TaskComponent = () => {
                           </Box>
                         }
                         secondary={
-                          <Box>
+                          <Box component="div">
                             {task.description && (
-                              <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                              <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }} component="span">
                                 {task.description}
                               </Typography>
                             )}
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" color="text.secondary" component="div">
                               Due: {new Date(task.date).toLocaleDateString()}
                             </Typography>
                           </Box>

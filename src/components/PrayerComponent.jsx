@@ -67,12 +67,16 @@ const PrayerComponent = () => {
   const fetchPrayers = async () => {
     try {
       const result = await prayerService.getTodaysPrayers(token);
+      console.log('🔍 Prayer API Response:', result);
+      
       if (result.success) {
         const prayersData = result.data || [];
+        console.log('📊 Normalized Prayer Data:', prayersData);
         setPrayers(prayersData);
         calculateStats(prayersData);
         setError('');
       } else if (result.needsCreation) {
+        console.log('🆕 No prayers found, creating new ones...');
         await logTodaysPrayers();
       } else {
         setError(result.error);
@@ -115,17 +119,24 @@ const PrayerComponent = () => {
     }
   };
 
-  const markPrayerComplete = async (prayerId) => {
+  const togglePrayerStatus = async (prayerId) => {
     try {
-      const result = await prayerService.markPrayerCompleted(token, prayerId);
-      if (result.success) {
+      // Validate prayer ID
+      if (!prayerId) {
+        setError('Prayer ID is missing');
+        return;
+      }
+
+      const result = await prayerService.togglePrayerStatus(token, prayerId);
+      if (result && result.success) {
         fetchPrayers(); // Refresh prayers and stats
+        setError(''); // Clear any previous errors
       } else {
-        setError(result.error);
+        setError(result?.error || 'Failed to toggle prayer status');
       }
     } catch (error) {
-      console.error('Error marking prayer complete:', error);
-      setError('Failed to mark prayer as complete');
+      console.error('Error toggling prayer status:', error);
+      setError('Failed to toggle prayer status');
     }
   };
 
@@ -167,7 +178,7 @@ const PrayerComponent = () => {
   const completionPercentage = stats.totalToday > 0 ? (stats.todayCompleted / stats.totalToday) * 100 : 0;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
+    <Box>
       {/* Header Section */}
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -179,7 +190,11 @@ const PrayerComponent = () => {
             startIcon={<Refresh />}
             variant="outlined"
             disabled={loading}
-            sx={{ borderColor: 'teal.600', color: 'teal.600' }}
+            sx={{ 
+              borderColor: 'teal.600', 
+              color: 'teal.600',
+              '&:hover': { borderColor: 'teal.700', backgroundColor: 'teal.50' }
+            }}
           >
             {loading ? 'Loading...' : 'Refresh Prayers'}
           </Button>
@@ -318,7 +333,7 @@ const PrayerComponent = () => {
                             boxShadow: prayer.isCompleted ? 'none' : '0 4px 12px rgba(0,0,0,0.15)'
                           }
                         }}
-                        onClick={() => !prayer.isCompleted && markPrayerComplete(prayer._id)}
+                        onClick={() => togglePrayerStatus(prayer._id)}
                       >
                         <CardContent sx={{ textAlign: 'center', py: 3 }}>
                           <Box sx={{ position: 'relative', display: 'inline-block' }}>
@@ -520,7 +535,7 @@ const PrayerComponent = () => {
           </Grid>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 };
 

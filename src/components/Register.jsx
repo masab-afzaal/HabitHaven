@@ -27,6 +27,7 @@ import { useAuth } from '../context/AuthContext';
 const Register = ({ onBack, onLoginClick }) => {
   const [formData, setFormData] = useState({
     fullName: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -62,8 +63,11 @@ const Register = ({ onBack, onLoginClick }) => {
     setLoading(true);
 
     try {
-      const result = await register(formData.fullName, formData.email, formData.password);
-      if (!result.success) {
+      const result = await register(formData.fullName, formData.username, formData.email, formData.password);
+      if (result.success) {
+        // Success! User will be automatically redirected to dashboard by App.jsx
+        // No need to do anything here as the user state will update and App will redirect
+      } else {
         setError(result.error);
       }
     } catch (err) {
@@ -80,6 +84,7 @@ const Register = ({ onBack, onLoginClick }) => {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
         py: 4
       }}
     >
@@ -170,6 +175,44 @@ const Register = ({ onBack, onLoginClick }) => {
               name="fullName"
               label="Full Name"
               value={formData.fullName}
+              onChange={handleChange}
+              required
+              sx={{
+                mb: 3,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  '& fieldset': {
+                    borderColor: '#a7f3d0',
+                    borderWidth: 2
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#6ee7b7'
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#0f766e'
+                  }
+                },
+                '& .MuiInputLabel-root': {
+                  color: '#134e4a',
+                  '&.Mui-focused': {
+                    color: '#0f766e'
+                  }
+                }
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Person sx={{ color: '#0f766e' }} />
+                  </InputAdornment>
+                )
+              }}
+            />
+
+            <TextField
+              fullWidth
+              name="username"
+              label="Username"
+              value={formData.username}
               onChange={handleChange}
               required
               sx={{

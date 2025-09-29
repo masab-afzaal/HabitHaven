@@ -48,6 +48,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import PrayerComponent from './PrayerComponent';
 import TaskComponent from './TaskComponent';
+import GroupComponent from './GroupComponent';
 
 const Dashboard = () => {
   const { user, logout, token } = useAuth();
@@ -75,7 +76,7 @@ const Dashboard = () => {
       });
       const result = await response.json();
       if (response.ok) {
-        setTasks(result.data || []);
+  setTasks(result.message || []);
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -92,7 +93,7 @@ const Dashboard = () => {
       });
       const result = await response.json();
       if (response.ok) {
-        setPrayers(result.data || []);
+  setPrayers(result.message || []);
       } else if (response.status === 404) {
         // No prayers for today, create them
         await logTodaysPrayers();
@@ -113,7 +114,7 @@ const Dashboard = () => {
       });
       const result = await response.json();
       if (response.ok) {
-        setPrayers(result.data || []);
+        setPrayers(result.message || []);
       }
     } catch (error) {
       console.error('Error creating prayers:', error);
@@ -194,7 +195,7 @@ const Dashboard = () => {
       case 'prayers':
         return <PrayerComponent />;
       case 'groups':
-        return <GroupsTab />;
+        return <GroupComponent />;
       case 'challenges':
         return <ChallengesTab />;
       case 'settings':
@@ -217,12 +218,20 @@ const Dashboard = () => {
 
     return (
       <Box>
-        <Typography variant="h4" sx={{ mb: 1, fontWeight: 'bold' }}>
-          Welcome back, {user?.fullName || user?.username}!
-        </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
-          Here's your spiritual journey overview for today
-        </Typography>
+        {/* Header Section */}
+        <Box sx={{ mb: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+              Dashboard Overview
+            </Typography>
+            <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+              Welcome back, {user?.fullName || user?.username}!
+            </Typography>
+          </Box>
+          <Typography variant="h6" color="text.secondary">
+            Here's your spiritual journey overview for today
+          </Typography>
+        </Box>
 
         {/* Stats Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -374,59 +383,31 @@ const Dashboard = () => {
     );
   };
 
-  // Tasks Tab Component
-  const TasksTab = () => {
-    return (
-      <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-          Task Manager
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Task management features coming soon...
-        </Typography>
-      </Container>
-    );
-  };
-
-  // Groups Tab Component
-  const GroupsTab = () => {
-    return (
-      <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-          Groups
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Group features coming soon...
-        </Typography>
-      </Container>
-    );
-  };
-
   // Challenges Tab Component
   const ChallengesTab = () => {
     return (
-      <Container maxWidth="xl">
+      <Box>
         <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
           Challenges
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Challenge features coming soon...
         </Typography>
-      </Container>
+      </Box>
     );
   };
 
   // Settings Tab Component
   const SettingsTab = () => {
     return (
-      <Container maxWidth="xl">
+      <Box>
         <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
           Settings
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Settings panel coming soon...
         </Typography>
-      </Container>
+      </Box>
     );
   };
 
