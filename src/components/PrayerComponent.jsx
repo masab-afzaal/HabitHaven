@@ -164,16 +164,26 @@ const PrayerComponent = () => {
     }
   }, [token, user]);
 
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-        <Box sx={{ textAlign: 'center' }}>
-          <CircularProgress sx={{ color: 'teal.600', mb: 2 }} />
-          <Typography variant="h6">Loading Prayers...</Typography>
-        </Box>
+ // In PrayerComponent and TaskComponent
+if (loading) {
+  return (
+    <Box 
+      sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100%', // Ensure it takes full height of its parent
+        minHeight: 400, // Fallback minimum height
+        width: '100%' // Ensure it takes full width
+      }}
+    >
+      <Box sx={{ textAlign: 'center' }}>
+        <CircularProgress sx={{ color: 'teal.600', mb: 2 }} />
+        <Typography variant="h6">Loading Prayers...</Typography> {/* Or Loading Tasks... */}
       </Box>
-    );
-  }
+    </Box>
+  );
+}
 
   const completionPercentage = stats.totalToday > 0 ? (stats.todayCompleted / stats.totalToday) * 100 : 0;
 
@@ -459,7 +469,7 @@ const PrayerComponent = () => {
                   
                   <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
                     {stats.todayCompleted === stats.totalToday 
-                      ? "🎉 All mandatory prayers completed!" 
+                      ? " All mandatory prayers completed!" 
                       : `${stats.totalToday - stats.todayCompleted} prayers remaining`
                     }
                   </Typography>

@@ -2,7 +2,7 @@
 // This file contains all the API calls for group functionality
 // Based on your backend routes: /api/v1/group
 
-const API_BASE = 'http://localhost:5000/api/v1';
+const API_BASE =import.meta.env.VITE_API_BASE ;
 
 export const groupService = {
   // POST /api/v1/group/createGroup - Create a new group

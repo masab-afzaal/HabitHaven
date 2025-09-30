@@ -61,11 +61,10 @@ const Login = ({ onBack, onRegisterClick }) => {
     <Box
       sx={{
         background: 'linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 50%, #e6fffa 100%)',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        py: 4
       }}
     >
       <Container maxWidth="sm">
@@ -77,10 +76,10 @@ const Login = ({ onBack, onRegisterClick }) => {
             borderRadius: 4,
             p: 6,
             backdropFilter: 'blur(10px)',
-            position: 'relative'
+            position: 'relative',
+            m: 4 // Added margin to all sides
           }}
         >
-          {/* Back Button */}
           <IconButton
             onClick={onBack}
             sx={{
@@ -93,7 +92,6 @@ const Login = ({ onBack, onRegisterClick }) => {
             <ArrowBack />
           </IconButton>
 
-          {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4, mt: 2 }}>
             <Avatar
               sx={{
@@ -132,7 +130,6 @@ const Login = ({ onBack, onRegisterClick }) => {
             </Typography>
           </Box>
 
-          {/* Error Alert */}
           {error && (
             <Alert 
               severity="error" 
@@ -148,7 +145,6 @@ const Login = ({ onBack, onRegisterClick }) => {
             </Alert>
           )}
 
-          {/* Login Form */}
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth

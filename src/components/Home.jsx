@@ -65,10 +65,11 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
       sx={{
         background: 'linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 50%, #e6fffa 100%)',
         minHeight: '100vh'
+        
       }}
     >
       {/* Hero Section */}
-      <Container maxWidth="xl" sx={{ pt: 8, pb: 12 }}>
+      <Container maxWidth="xl" sx={{ pt: 25, pb: 12 }}>
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Typography
             variant="h2"

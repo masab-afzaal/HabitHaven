@@ -84,8 +84,7 @@ const Register = ({ onBack, onLoginClick }) => {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        py: 4
+        justifyContent: 'center'
       }}
     >
       <Container maxWidth="sm">
@@ -97,10 +96,10 @@ const Register = ({ onBack, onLoginClick }) => {
             borderRadius: 4,
             p: 6,
             backdropFilter: 'blur(10px)',
-            position: 'relative'
+            position: 'relative',
+            m: 4 // Added margin to all sides
           }}
         >
-          {/* Back Button */}
           <IconButton
             onClick={onBack}
             sx={{
@@ -113,7 +112,6 @@ const Register = ({ onBack, onLoginClick }) => {
             <ArrowBack />
           </IconButton>
 
-          {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4, mt: 2 }}>
             <Avatar
               sx={{
@@ -152,7 +150,6 @@ const Register = ({ onBack, onLoginClick }) => {
             </Typography>
           </Box>
 
-          {/* Error Alert */}
           {error && (
             <Alert 
               severity="error" 
@@ -168,7 +165,6 @@ const Register = ({ onBack, onLoginClick }) => {
             </Alert>
           )}
 
-          {/* Register Form */}
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth

@@ -2,7 +2,7 @@
 // This file contains all the API calls for prayer functionality
 // Make sure your backend has these routes implemented as described
 
-const API_BASE = 'http://localhost:5000/api/v1';
+const API_BASE =import.meta.env.VITE_API_BASE ;
 
 // Prayer API endpoints matching your backend routes
 export const prayerService = {
@@ -89,7 +89,7 @@ export const prayerService = {
         return { success: false, error: 'Prayer ID is required' };
       }
 
-      const response = await fetch(`${API_BASE}/prayer/${prayerId}/complete`, {
+      const response = await fetch(`${API_BASE}/prayer/${prayerId}/compelete`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

@@ -2,7 +2,7 @@
 // This file contains all the API calls for task functionality
 // Based on your backend routes: /api/v1/task
 
-const API_BASE = 'http://localhost:5000/api/v1';
+const API_BASE =import.meta.env.VITE_API_BASE ;
 
 export const taskService = {
   // POST /api/v1/task/createTask - Create a new task
