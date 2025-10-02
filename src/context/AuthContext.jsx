@@ -151,7 +151,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (username, email, password, fullName) => {
+  const register = async (fullName, username, email, password) => {
     try {
   const response = await fetch(`${API_BASE}/register`, {
         method: 'POST',
@@ -164,7 +164,13 @@ export const AuthProvider = ({ children }) => {
       const result = await response.json();
       
       if (response.ok) {
-        return { success: true, message: result.message || 'Registration successful! Please login.' };
+        // Auto-login after successful registration
+        const loginResult = await login(email, password);
+        if (loginResult.success) {
+          return { success: true, message: 'Registration successful! Welcome to HabitHaven!' };
+        } else {
+          return { success: true, message: 'Registration successful! Please login.', autoLogin: false };
+        }
       } else {
         return { success: false, error: result.message || 'Registration failed' };
       }

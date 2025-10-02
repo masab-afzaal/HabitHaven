@@ -67,12 +67,16 @@ const PrayerComponent = () => {
   const fetchPrayers = async () => {
     try {
       const result = await prayerService.getTodaysPrayers(token);
+      console.log('🔍 Prayer API Response:', result);
+      
       if (result.success) {
         const prayersData = result.data || [];
+        console.log('📊 Normalized Prayer Data:', prayersData);
         setPrayers(prayersData);
         calculateStats(prayersData);
         setError('');
       } else if (result.needsCreation) {
+        console.log('🆕 No prayers found, creating new ones...');
         await logTodaysPrayers();
       } else {
         setError(result.error);
@@ -115,17 +119,24 @@ const PrayerComponent = () => {
     }
   };
 
-  const markPrayerComplete = async (prayerId) => {
+  const togglePrayerStatus = async (prayerId) => {
     try {
-      const result = await prayerService.markPrayerCompleted(token, prayerId);
-      if (result.success) {
+      // Validate prayer ID
+      if (!prayerId) {
+        setError('Prayer ID is missing');
+        return;
+      }
+
+      const result = await prayerService.togglePrayerStatus(token, prayerId);
+      if (result && result.success) {
         fetchPrayers(); // Refresh prayers and stats
+        setError(''); // Clear any previous errors
       } else {
-        setError(result.error);
+        setError(result?.error || 'Failed to toggle prayer status');
       }
     } catch (error) {
-      console.error('Error marking prayer complete:', error);
-      setError('Failed to mark prayer as complete');
+      console.error('Error toggling prayer status:', error);
+      setError('Failed to toggle prayer status');
     }
   };
 
@@ -153,21 +164,31 @@ const PrayerComponent = () => {
     }
   }, [token, user]);
 
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-        <Box sx={{ textAlign: 'center' }}>
-          <CircularProgress sx={{ color: 'teal.600', mb: 2 }} />
-          <Typography variant="h6">Loading Prayers...</Typography>
-        </Box>
+ // In PrayerComponent and TaskComponent
+if (loading) {
+  return (
+    <Box 
+      sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100%', // Ensure it takes full height of its parent
+        minHeight: 400, // Fallback minimum height
+        width: '100%' // Ensure it takes full width
+      }}
+    >
+      <Box sx={{ textAlign: 'center' }}>
+        <CircularProgress sx={{ color: 'teal.600', mb: 2 }} />
+        <Typography variant="h6">Loading Prayers...</Typography> {/* Or Loading Tasks... */}
       </Box>
-    );
-  }
+    </Box>
+  );
+}
 
   const completionPercentage = stats.totalToday > 0 ? (stats.todayCompleted / stats.totalToday) * 100 : 0;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
+    <Box>
       {/* Header Section */}
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -179,7 +200,11 @@ const PrayerComponent = () => {
             startIcon={<Refresh />}
             variant="outlined"
             disabled={loading}
-            sx={{ borderColor: 'teal.600', color: 'teal.600' }}
+            sx={{ 
+              borderColor: 'teal.600', 
+              color: 'teal.600',
+              '&:hover': { borderColor: 'teal.700', backgroundColor: 'teal.50' }
+            }}
           >
             {loading ? 'Loading...' : 'Refresh Prayers'}
           </Button>
@@ -318,7 +343,7 @@ const PrayerComponent = () => {
                             boxShadow: prayer.isCompleted ? 'none' : '0 4px 12px rgba(0,0,0,0.15)'
                           }
                         }}
-                        onClick={() => !prayer.isCompleted && markPrayerComplete(prayer._id)}
+                        onClick={() => togglePrayerStatus(prayer._id)}
                       >
                         <CardContent sx={{ textAlign: 'center', py: 3 }}>
                           <Box sx={{ position: 'relative', display: 'inline-block' }}>
@@ -444,7 +469,7 @@ const PrayerComponent = () => {
                   
                   <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
                     {stats.todayCompleted === stats.totalToday 
-                      ? "🎉 All mandatory prayers completed!" 
+                      ? " All mandatory prayers completed!" 
                       : `${stats.totalToday - stats.todayCompleted} prayers remaining`
                     }
                   </Typography>
@@ -520,7 +545,7 @@ const PrayerComponent = () => {
           </Grid>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 };
 

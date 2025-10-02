@@ -2,7 +2,7 @@
 // This file contains all the API calls for task functionality
 // Based on your backend routes: /api/v1/task
 
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE =import.meta.env.VITE_API_BASE ;
 
 export const taskService = {
   // POST /api/v1/task/createTask - Create a new task
@@ -41,9 +41,20 @@ export const taskService = {
       });
       
       const result = await response.json();
-      
       if (response.ok) {
-        return { success: true, data: result.data };
+        // Map tasks from result.message and normalize fields for dashboard
+        const tasks = Array.isArray(result.message) ? result.message.map(task => ({
+          _id: task._id || task.id,
+          id: task._id || task.id,
+          userId: task.userId,
+          title: task.title,
+          description: task.description,
+          isCompleted: task.isCompleted,
+          date: task.date,
+          createdAt: task.createdAt,
+          updatedAt: task.updatedAt
+        })) : [];
+        return { success: true, data: tasks };
       } else {
         return { success: false, error: result.message || 'Failed to fetch tasks' };
       }

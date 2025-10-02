@@ -6,10 +6,11 @@ import { Mosque } from '@mui/icons-material';
 const Header = ({ onLoginClick, onRegisterClick }) => {
   return (
     <AppBar 
-      position="sticky" 
+      
       sx={{ 
         background: 'linear-gradient(135deg, #0f766e 0%, #115e59 100%)',
-        boxShadow: '0 4px 20px rgba(15, 118, 110, 0.3)'
+        boxShadow: '0 4px 20px rgba(15, 118, 110, 0.3)',
+
       }}
     >
       <Container maxWidth="xl">
@@ -24,7 +25,8 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(20, 184, 166, 0.4)'
+                boxShadow: '0 4px 12px rgba(20, 184, 166, 0.4)',
+                
               }}
             >
               <Mosque sx={{ color: 'white', fontSize: 28 }} />
@@ -36,7 +38,8 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
                 sx={{ 
                   fontWeight: 'bold',
                   color: 'white',
-                  fontFamily: 'Inter, sans-serif'
+                  fontFamily: 'Inter, sans-serif',
+                  
                 }}
               >
                 Habit<span style={{ color: '#5eead4' }}>Haven</span>

@@ -118,7 +118,7 @@ const App = () => {
         );
       default:
         return (
-          <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column'    }} style={{margin:"20px"}}>
             <Header 
               onLoginClick={() => setCurrentView('login')}
               onRegisterClick={() => setCurrentView('register')}

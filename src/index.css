@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* :root {
+:root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -16,7 +16,7 @@
 } */
 
 /* Custom Animations */
-@keyframes fadeInUp {
+/* @keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(30px);
@@ -25,9 +25,9 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
+} */
 
-@keyframes fadeInLeft {
+/* @keyframes fadeInLeft {
   from {
     opacity: 0;
     transform: translateX(-30px);
@@ -36,9 +36,9 @@
     opacity: 1;
     transform: translateX(0);
   }
-}
+} */
 
-@keyframes fadeInRight {
+/* @keyframes fadeInRight {
   from {
     opacity: 0;
     transform: translateX(30px);
@@ -47,13 +47,13 @@
     opacity: 1;
     transform: translateX(0);
   }
-}
+} */
 
-@keyframes shake {
+/* @keyframes shake {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
   20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
+} */
 
 /* .animate-fade-in-up {
   animation: fadeInUp 0.8s ease-out forwards;
