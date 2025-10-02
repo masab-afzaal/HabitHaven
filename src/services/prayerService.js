@@ -2,7 +2,7 @@
 // This file contains all the API calls for prayer functionality
 // Make sure your backend has these routes implemented as described
 
-const API_BASE = 'http://localhost:5000/api/v1';
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 // Prayer API endpoints matching your backend routes
 export const prayerService = {
