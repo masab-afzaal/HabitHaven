@@ -60,7 +60,7 @@ const Dashboard = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [prayers, setPrayers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [openTaskDialog, setOpenTaskDialog] = useState(false);
   const [newTask, setNewTask] = useState({ title: '', description: '', date: '' });
 

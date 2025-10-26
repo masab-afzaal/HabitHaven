@@ -4,15 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import { Box, CircularProgress, Typography, Avatar } from '@mui/material';
 import { Mosque } from '@mui/icons-material';
 
-/**
- * Protected Route Component
- * Redirects to login if user is not authenticated
- * Shows loading state while checking authentication
- */
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
-  if (loading) {
+  if (loading && !user) {
     return (
       <Box
         sx={{

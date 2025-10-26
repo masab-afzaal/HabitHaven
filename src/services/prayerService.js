@@ -49,7 +49,7 @@ export const prayerService = {
       return { success: false, error: 'Prayer ID is required' };
     }
 
-    const result = await apiService.post(`/prayer/${prayerId}/complete`);
+    const result = await apiService.post(`/prayer/${prayerId}/compelete`);
     
     if (result.success) {
       const responseData = result.data?.message || result.data?.data || result.data;

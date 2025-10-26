@@ -21,9 +21,9 @@ export const AuthProvider = ({ children }) => {
 
 
   useEffect(() => {
-    if (token) {
+    if (token && !user) {
       getCurrentUser();
-    } else {
+    } else if (!token) {
       setLoading(false);
     }
   }, [token]);
@@ -60,6 +60,7 @@ export const AuthProvider = ({ children }) => {
         setToken(accessToken);
         localStorage.setItem('token', accessToken);
         setUser(user);
+        setLoading(false);
         return { success: true };
       } else {
         let errorMessage = 'Login failed';
