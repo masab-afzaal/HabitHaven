@@ -1,10 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { colors, shadows } from '../styles';
 
-// Material UI theme configuration with Azure Peace colors
-import { createTheme } from '@mui/material/styles';
-import { colors } from '../styles/colors';
-
 const theme = createTheme({
   palette: {
     primary: {
