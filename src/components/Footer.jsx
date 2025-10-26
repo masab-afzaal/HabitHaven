@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Container, Grid, Typography, Link, Divider } from '@mui/material';
 import { Mosque, Facebook, Twitter, Instagram } from '@mui/icons-material';
+import { colors, gradients, shadows } from '../styles';
 
 // Footer Component
 const Footer = () => {
@@ -8,9 +9,11 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        background: 'linear-gradient(135deg, #0f766e 0%, #115e59 100%)',
+        backgroundColor: 'rgba(248, 250, 252, 0.95)', // neutral slate-50
+        borderTop: '1px solid rgba(226, 232, 240, 0.8)', // slate-200
         mt: 'auto',
-        py: 8
+        py: 8,
+        boxShadow: shadows.lg
       }}
     >
       <Container maxWidth="xl">
@@ -21,12 +24,13 @@ const Footer = () => {
                 sx={{
                   width: 56,
                   height: 56,
-                  background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+                  background: colors.primary.main,
                   borderRadius: 3,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(20, 184, 166, 0.4)'
+                  boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)',
+                  border: '1px solid rgba(2, 132, 199, 0.2)',
                 }}
               >
                 <Mosque sx={{ color: 'white', fontSize: 32 }} />
@@ -36,15 +40,15 @@ const Footer = () => {
                   variant="h4" 
                   sx={{ 
                     fontWeight: 'bold',
-                    color: 'white',
+                    color: colors.text.primary,
                     fontFamily: 'Inter, sans-serif'
                   }}
                 >
-                  Habit<span style={{ color: '#5eead4' }}>Haven</span>
+                  Habit<span style={{ color: colors.primary.main }}>Haven</span>
                 </Typography>
                 <Typography 
                   variant="body2" 
-                  sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                  sx={{ color: colors.text.secondary }}
                 >
                   Spiritual Growth & Productivity Platform
                 </Typography>
@@ -53,7 +57,7 @@ const Footer = () => {
             <Typography 
               variant="body1" 
               sx={{ 
-                color: 'rgba(255, 255, 255, 0.9)',
+                color: colors.text.secondary,
                 lineHeight: 1.6,
                 maxWidth: 400
               }}
@@ -67,7 +71,7 @@ const Footer = () => {
             <Typography 
               variant="h6" 
               sx={{ 
-                color: 'white',
+                color: colors.text.primary,
                 fontWeight: 600,
                 mb: 3
               }}
@@ -80,11 +84,11 @@ const Footer = () => {
                   key={item}
                   href="#"
                   sx={{
-                    color: 'rgba(255, 255, 255, 0.8)',
+                    color: colors.text.secondary,
                     textDecoration: 'none',
                     fontSize: '0.95rem',
                     '&:hover': {
-                      color: '#5eead4',
+                      color: colors.primary.main,
                       textDecoration: 'none'
                     },
                     transition: 'color 0.3s ease'
@@ -100,7 +104,7 @@ const Footer = () => {
             <Typography 
               variant="h6" 
               sx={{ 
-                color: 'white',
+                color: colors.text.primary,
                 fontWeight: 600,
                 mb: 3
               }}
@@ -113,11 +117,11 @@ const Footer = () => {
                   key={item}
                   href="#"
                   sx={{
-                    color: 'rgba(255, 255, 255, 0.8)',
+                    color: colors.text.secondary,
                     textDecoration: 'none',
                     fontSize: '0.95rem',
                     '&:hover': {
-                      color: '#5eead4',
+                      color: colors.primary.main,
                       textDecoration: 'none'
                     },
                     transition: 'color 0.3s ease'
@@ -130,12 +134,12 @@ const Footer = () => {
           </Grid>
         </Grid>
         
-        <Divider sx={{ my: 6, borderColor: 'rgba(255, 255, 255, 0.2)' }} />
+        <Divider sx={{ my: 6, borderColor: 'rgba(226, 232, 240, 0.6)' }} />
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
           <Typography 
             variant="body2" 
-            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+            sx={{ color: colors.text.secondary }}
           >
             © 2025 HabitHaven. All rights reserved. Built with ❤️ for spiritual growth.
           </Typography>
@@ -146,11 +150,11 @@ const Footer = () => {
                 key={item}
                 href="#"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: colors.text.secondary,
                   textDecoration: 'none',
                   fontSize: '0.875rem',
                   '&:hover': {
-                    color: '#5eead4',
+                    color: colors.primary.main,
                     textDecoration: 'none'
                   },
                   transition: 'color 0.3s ease'

@@ -1,155 +1,99 @@
-// Group API Service
-// This file contains all the API calls for group functionality
-// Based on your backend routes: /api/v1/group
+import { apiService } from '../api';
+import { API_ENDPOINTS } from '../constants';
 
-const API_BASE = 'http://localhost:5000/api/v1';
-
+/**
+ * Group API Service
+ * Handles all group-related API calls
+ */
 export const groupService = {
-  // POST /api/v1/group/createGroup - Create a new group
-  createGroup: async (token, groupData) => {
-    try {
-      const response = await fetch(`${API_BASE}/group/createGroup`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(groupData)
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, data: result.data };
-      } else {
-        return { success: false, error: result.message || 'Failed to create group' };
-      }
-    } catch (error) {
-      console.error('Error creating group:', error);
-      return { success: false, error: 'Network error' };
-    }
+  /**
+   * Create a new group
+   * @param {Object} groupData - Group data (name, description, etc.)
+   * @returns {Promise<Object>} Response with success status and group data
+   */
+  createGroup: async (groupData) => {
+    const result = await apiService.post(API_ENDPOINTS.GROUP.CREATE, groupData);
+    return result;
   },
 
-  // POST /api/v1/group/:id/join - Join a group
-  joinGroup: async (token, groupId) => {
-    try {
-      // Validate groupId
-      if (!groupId) {
-        return { success: false, error: 'Group ID is required' };
-      }
-
-      const response = await fetch(`${API_BASE}/group/${groupId}/join`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, data: result.data };
-      } else {
-        return { success: false, error: result.message || 'Failed to join group' };
-      }
-    } catch (error) {
-      console.error('Error joining group:', error);
-      return { success: false, error: 'Network error' };
+  /**
+   * Join a group
+   * @param {string} groupId - Group ID to join
+   * @returns {Promise<Object>} Response with success status
+   */
+  joinGroup: async (groupId) => {
+    if (!groupId) {
+      return { success: false, error: 'Group ID is required' };
     }
+    
+    const result = await apiService.post(API_ENDPOINTS.GROUP.JOIN(groupId));
+    return result;
   },
 
-  // GET /api/v1/group/allGroups - Get all available groups (assuming this exists)
-  getAllGroups: async (token) => {
-    try {
-      const response = await fetch(`${API_BASE}/group/allGroups`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      // Handle 404 - route doesn't exist yet
-      if (response.status === 404) {
-        console.log('getAllGroups route not implemented yet');
-        return { success: true, data: [] };
-      }
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        // Handle backend response structure - data might be in 'message' or 'data' field
-        const groups = result.message || result.data || [];
-        return { success: true, data: Array.isArray(groups) ? groups : [] };
-      } else {
-        return { success: false, error: result.message || 'Failed to fetch groups' };
-      }
-    } catch (error) {
-      console.error('Error fetching groups:', error);
-      // Return empty array instead of error for now since route doesn't exist
+  /**
+   * Get all available groups
+   * @returns {Promise<Object>} Response with success status and groups array
+   */
+  getAllGroups: async () => {
+    const result = await apiService.get(API_ENDPOINTS.GROUP.GET_ALL);
+    
+    if (result.success) {
+      // Normalize groups data
+      const groups = result.data?.message || result.data?.data || [];
+      return { 
+        success: true, 
+        data: Array.isArray(groups) ? groups : [] 
+      };
+    }
+    
+    // Return empty array if route doesn't exist yet
+    if (result.error?.includes('404') || result.error?.includes('not found')) {
       return { success: true, data: [] };
     }
+    
+    return result;
   },
 
-  // GET /api/v1/group/myGroups - Get user's joined groups (assuming this exists)
-  getMyGroups: async (token) => {
-    try {
-      const response = await fetch(`${API_BASE}/group/myGroups`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      // Handle 404 - route doesn't exist yet
-      if (response.status === 404) {
-        console.log('getMyGroups route not implemented yet');
-        return { success: true, data: [] };
-      }
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        // Handle backend response structure
-        const groups = result.message || result.data || [];
-        return { success: true, data: Array.isArray(groups) ? groups : [] };
-      } else {
-        return { success: false, error: result.message || 'Failed to fetch your groups' };
-      }
-    } catch (error) {
-      console.error('Error fetching my groups:', error);
-      // Return empty array instead of error for now since route doesn't exist
+  /**
+   * Get user's joined groups
+   * @returns {Promise<Object>} Response with success status and groups array
+   */
+  getMyGroups: async () => {
+    const result = await apiService.get(API_ENDPOINTS.GROUP.GET_MY_GROUPS);
+    
+    if (result.success) {
+      // Normalize groups data
+      const groups = result.data?.message || result.data?.data || [];
+      return { 
+        success: true, 
+        data: Array.isArray(groups) ? groups : [] 
+      };
+    }
+    
+    // Return empty array if route doesn't exist yet
+    if (result.error?.includes('404') || result.error?.includes('not found')) {
       return { success: true, data: [] };
     }
+    
+    return result;
   },
 
-  // GET /api/v1/group/:id - Get group details (assuming this exists)
-  getGroupById: async (token, groupId) => {
-    try {
-      if (!groupId) {
-        return { success: false, error: 'Group ID is required' };
-      }
-
-      const response = await fetch(`${API_BASE}/group/${groupId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, data: result.data };
-      } else {
-        return { success: false, error: result.message || 'Failed to fetch group details' };
-      }
-    } catch (error) {
-      console.error('Error fetching group details:', error);
-      return { success: false, error: 'Network error' };
+  /**
+   * Get group details by ID
+   * @param {string} groupId - Group ID
+   * @returns {Promise<Object>} Response with success status and group data
+   */
+  getGroupById: async (groupId) => {
+    if (!groupId) {
+      return { success: false, error: 'Group ID is required' };
     }
-  }
+    
+    const result = await apiService.get(API_ENDPOINTS.GROUP.GET_BY_ID(groupId));
+    return result;
+  },
 };
+
+export default groupService;
 
 // Usage examples for your components:
 

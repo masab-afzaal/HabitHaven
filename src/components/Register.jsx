@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -23,8 +24,10 @@ import {
   ArrowBack
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
+import { colors, gradients, shadows, commonStyles } from '../styles';
 
-const Register = ({ onBack, onLoginClick }) => {
+const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
@@ -80,7 +83,7 @@ const Register = ({ onBack, onLoginClick }) => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 50%, #e6fffa 100%)',
+        background: gradients.background.primary,
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
@@ -92,22 +95,19 @@ const Register = ({ onBack, onLoginClick }) => {
         <Paper
           elevation={0}
           sx={{
-            background: 'rgba(255, 255, 255, 0.85)',
-            border: '2px solid #a7f3d0',
-            borderRadius: 4,
+            ...commonStyles.frostedGlassCard,
             p: 6,
-            backdropFilter: 'blur(10px)',
             position: 'relative'
           }}
         >
           {/* Back Button */}
           <IconButton
-            onClick={onBack}
+            onClick={() => navigate('/')}
             sx={{
               position: 'absolute',
               top: 16,
               left: 16,
-              color: '#0f766e'
+              color: colors.text.accent
             }}
           >
             <ArrowBack />
@@ -121,7 +121,7 @@ const Register = ({ onBack, onLoginClick }) => {
                 height: 80,
                 mx: 'auto',
                 mb: 3,
-                background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+                ...commonStyles.avatarGradient,
                 boxShadow: '0 8px 24px rgba(20, 184, 166, 0.3)'
               }}
             >
@@ -133,7 +133,7 @@ const Register = ({ onBack, onLoginClick }) => {
               component="h1"
               sx={{
                 fontWeight: 'bold',
-                color: '#042f2e',
+                color: colors.text.primary,
                 mb: 1,
                 fontFamily: 'Inter, sans-serif'
               }}
@@ -144,7 +144,7 @@ const Register = ({ onBack, onLoginClick }) => {
             <Typography
               variant="h6"
               sx={{
-                color: '#134e4a',
+                color: '#0c4a6e',
                 fontWeight: 400
               }}
             >
@@ -182,27 +182,27 @@ const Register = ({ onBack, onLoginClick }) => {
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
                   '& fieldset': {
-                    borderColor: '#a7f3d0',
+                    borderColor: '#bae6fd',
                     borderWidth: 2
                   },
                   '&:hover fieldset': {
-                    borderColor: '#6ee7b7'
+                    borderColor: '#7dd3fc'
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#0f766e'
+                    bordercolor: colors.text.accent
                   }
                 },
                 '& .MuiInputLabel-root': {
-                  color: '#134e4a',
+                  color: '#0c4a6e',
                   '&.Mui-focused': {
-                    color: '#0f766e'
+                    color: colors.text.accent
                   }
                 }
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Person sx={{ color: '#0f766e' }} />
+                    <Person sx={{ color: colors.text.accent }} />
                   </InputAdornment>
                 )
               }}
@@ -220,27 +220,27 @@ const Register = ({ onBack, onLoginClick }) => {
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
                   '& fieldset': {
-                    borderColor: '#a7f3d0',
+                    borderColor: '#bae6fd',
                     borderWidth: 2
                   },
                   '&:hover fieldset': {
-                    borderColor: '#6ee7b7'
+                    borderColor: '#7dd3fc'
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#0f766e'
+                    bordercolor: colors.text.accent
                   }
                 },
                 '& .MuiInputLabel-root': {
-                  color: '#134e4a',
+                  color: '#0c4a6e',
                   '&.Mui-focused': {
-                    color: '#0f766e'
+                    color: colors.text.accent
                   }
                 }
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Person sx={{ color: '#0f766e' }} />
+                    <Person sx={{ color: colors.text.accent }} />
                   </InputAdornment>
                 )
               }}
@@ -259,27 +259,27 @@ const Register = ({ onBack, onLoginClick }) => {
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
                   '& fieldset': {
-                    borderColor: '#a7f3d0',
+                    borderColor: '#bae6fd',
                     borderWidth: 2
                   },
                   '&:hover fieldset': {
-                    borderColor: '#6ee7b7'
+                    borderColor: '#7dd3fc'
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#0f766e'
+                    bordercolor: colors.text.accent
                   }
                 },
                 '& .MuiInputLabel-root': {
-                  color: '#134e4a',
+                  color: '#0c4a6e',
                   '&.Mui-focused': {
-                    color: '#0f766e'
+                    color: colors.text.accent
                   }
                 }
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Email sx={{ color: '#0f766e' }} />
+                    <Email sx={{ color: colors.text.accent }} />
                   </InputAdornment>
                 )
               }}
@@ -300,27 +300,27 @@ const Register = ({ onBack, onLoginClick }) => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '& fieldset': {
-                        borderColor: '#a7f3d0',
+                        borderColor: '#bae6fd',
                         borderWidth: 2
                       },
                       '&:hover fieldset': {
-                        borderColor: '#6ee7b7'
+                        borderColor: '#7dd3fc'
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#0f766e'
+                        bordercolor: colors.text.accent
                       }
                     },
                     '& .MuiInputLabel-root': {
-                      color: '#134e4a',
+                      color: '#0c4a6e',
                       '&.Mui-focused': {
-                        color: '#0f766e'
+                        color: colors.text.accent
                       }
                     }
                   }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Lock sx={{ color: '#0f766e' }} />
+                        <Lock sx={{ color: colors.text.accent }} />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -328,7 +328,7 @@ const Register = ({ onBack, onLoginClick }) => {
                         <IconButton
                           onClick={() => setShowPassword(!showPassword)}
                           edge="end"
-                          sx={{ color: '#0f766e' }}
+                          sx={{ color: colors.text.accent }}
                         >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
@@ -352,27 +352,27 @@ const Register = ({ onBack, onLoginClick }) => {
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       '& fieldset': {
-                        borderColor: '#a7f3d0',
+                        borderColor: '#bae6fd',
                         borderWidth: 2
                       },
                       '&:hover fieldset': {
-                        borderColor: '#6ee7b7'
+                        borderColor: '#7dd3fc'
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#0f766e'
+                        bordercolor: colors.text.accent
                       }
                     },
                     '& .MuiInputLabel-root': {
-                      color: '#134e4a',
+                      color: '#0c4a6e',
                       '&.Mui-focused': {
-                        color: '#0f766e'
+                        color: colors.text.accent
                       }
                     }
                   }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Lock sx={{ color: '#0f766e' }} />
+                        <Lock sx={{ color: colors.text.accent }} />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -380,7 +380,7 @@ const Register = ({ onBack, onLoginClick }) => {
                         <IconButton
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                           edge="end"
-                          sx={{ color: '#0f766e' }}
+                          sx={{ color: colors.text.accent }}
                         >
                           {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
@@ -398,7 +398,7 @@ const Register = ({ onBack, onLoginClick }) => {
               size="large"
               disabled={loading}
               sx={{
-                backgroundColor: '#0f766e',
+                backgroundcolor: colors.text.accent,
                 color: 'white',
                 py: 1.5,
                 fontSize: '1.1rem',
@@ -408,7 +408,7 @@ const Register = ({ onBack, onLoginClick }) => {
                 mb: 3,
                 boxShadow: '0 8px 24px rgba(15, 118, 110, 0.3)',
                 '&:hover': {
-                  backgroundColor: '#115e59',
+                  backgroundColor: '#0369a1',
                   transform: 'translateY(-2px)',
                   boxShadow: '0 12px 32px rgba(15, 118, 110, 0.4)'
                 },
@@ -422,20 +422,20 @@ const Register = ({ onBack, onLoginClick }) => {
               {loading ? 'Creating Account...' : 'Create Account'}
             </Button>
 
-            <Divider sx={{ my: 3, color: '#134e4a' }}>or</Divider>
+            <Divider sx={{ my: 3, color: '#0c4a6e' }}>or</Divider>
 
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="body1" sx={{ color: '#134e4a', mb: 2 }}>
+              <Typography variant="body1" sx={{ color: '#0c4a6e', mb: 2 }}>
                 Already have an account?
               </Typography>
               
               <Button
-                onClick={onLoginClick}
+                onClick={() => navigate('/login')}
                 variant="outlined"
                 fullWidth
                 sx={{
-                  borderColor: '#0f766e',
-                  color: '#0f766e',
+                  bordercolor: colors.text.accent,
+                  color: colors.text.accent,
                   py: 1.5,
                   fontSize: '1rem',
                   fontWeight: 600,
@@ -443,7 +443,7 @@ const Register = ({ onBack, onLoginClick }) => {
                   textTransform: 'none',
                   borderWidth: 2,
                   '&:hover': {
-                    borderColor: '#115e59',
+                    borderColor: '#0369a1',
                     backgroundColor: 'rgba(15, 118, 110, 0.05)',
                     borderWidth: 2
                   }

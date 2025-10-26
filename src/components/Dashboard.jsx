@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -49,6 +49,7 @@ import { useAuth } from '../context/AuthContext';
 import PrayerComponent from './PrayerComponent';
 import TaskComponent from './TaskComponent';
 import GroupComponent from './GroupComponent';
+import { colors, gradients, shadows, commonStyles } from '../styles';
 
 const Dashboard = () => {
   const { user, logout, token } = useAuth();
@@ -236,26 +237,26 @@ const Dashboard = () => {
         {/* Stats Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card sx={{ background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)', color: 'white' }}>
+            <Card sx={{ backgroundColor: colors.primary.main, color: 'white', boxShadow: shadows.card.default }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box>
                     <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                       {completedMandatory}/{mandatoryPrayers.length}
                     </Typography>
-                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    <Typography variant="body2" sx={{ opacity: 0.95 }}>
                       Today's Prayers
                     </Typography>
                   </Box>
-                  <Mosque sx={{ fontSize: 40, opacity: 0.8 }} />
+                  <Mosque sx={{ fontSize: 40, opacity: 0.9 }} />
                 </Box>
                 <LinearProgress
                   variant="determinate"
                   value={mandatoryPrayers.length > 0 ? (completedMandatory / mandatoryPrayers.length) * 100 : 0}
                   sx={{
                     mt: 2,
-                    backgroundColor: 'rgba(255,255,255,0.3)',
-                    '& .MuiLinearProgress-bar': { backgroundColor: 'rgba(255,255,255,0.9)' }
+                    backgroundColor: 'rgba(255,255,255,0.25)',
+                    '& .MuiLinearProgress-bar': { backgroundColor: 'rgba(255,255,255,0.95)' }
                   }}
                 />
               </CardContent>
@@ -427,27 +428,29 @@ const Dashboard = () => {
           sx={{
             width: 64,
             height: 64,
-            background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+            background: 'rgba(255, 255, 255, 0.75)',
             borderRadius: 3,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             mx: 'auto',
             mb: 2,
-            boxShadow: '0 8px 32px rgba(20, 184, 166, 0.3)'
+            boxShadow: shadows.avatar,
+            border: `1px solid ${colors.border.main}`,
+            backdropFilter: 'blur(8px)'
           }}
         >
-          <Mosque sx={{ color: 'white', fontSize: 32 }} />
+          <Mosque sx={{ color: colors.text.accent, fontSize: 32 }} />
         </Box>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'teal.700' }}>
-          Habit<span style={{ color: '#14b8a6' }}>Haven</span>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: colors.text.primary }}>
+          Habit<span style={{ color: colors.text.accent }}>Haven</span>
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{ color: colors.text.secondary }}>
           Welcome, {user?.username}!
         </Typography>
       </Box>
       
-      <Divider />
+      <Divider sx={{ borderColor: colors.border.light }} />
       
       <List sx={{ px: 2, py: 1 }}>
         {menuItems.map((item) => (
@@ -509,7 +512,7 @@ const Dashboard = () => {
       <Box 
         sx={{ 
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%)',
+          background: gradients.background.primary,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
@@ -520,20 +523,22 @@ const Dashboard = () => {
             sx={{
               width: 80,
               height: 80,
-              background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+              background: 'rgba(255, 255, 255, 0.75)',
               borderRadius: 3,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               mx: 'auto',
               mb: 3,
-              boxShadow: '0 8px 32px rgba(20, 184, 166, 0.3)'
+              boxShadow: shadows.avatar,
+              border: `1px solid ${colors.border.main}`,
+              backdropFilter: 'blur(8px)'
             }}
           >
-            <Mosque sx={{ color: 'white', fontSize: 40 }} />
+            <Mosque sx={{ color: colors.text.accent, fontSize: 40 }} />
           </Box>
-          <CircularProgress sx={{ color: 'teal.600', mb: 2 }} />
-          <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'teal.700' }}>
+          <CircularProgress sx={{ color: colors.text.accent, mb: 2 }} />
+          <Typography variant="h6" sx={{ fontWeight: 'bold', color: colors.text.primary }}>
             Loading Dashboard...
           </Typography>
         </Box>
@@ -546,7 +551,7 @@ const Dashboard = () => {
       sx={{ 
         display: 'flex', 
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%)'
+        background: gradients.background.primary
       }}
     >
       {isMobile && (

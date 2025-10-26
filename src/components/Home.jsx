@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Box, 
   Container, 
@@ -22,48 +23,50 @@ import {
   TrendingUp,
   Schedule
 } from '@mui/icons-material';
+import { colors, gradients, shadows, commonStyles } from '../styles';
 
 // Home Component
-const Home = ({ onLoginClick, onRegisterClick }) => {
+const Home = () => {
+  const navigate = useNavigate();
   const features = [
     {
-      icon: <Mosque sx={{ fontSize: 40, color: '#0f766e' }} />,
+      icon: <Mosque sx={{ fontSize: 40, color: colors.text.accent }} />,
       title: 'Prayer & Task Tracking',
       description: 'Log your prayers and productivity tasks, view history, and monitor progress over time with detailed analytics.'
     },
     {
-      icon: <Notifications sx={{ fontSize: 40, color: '#0f766e' }} />,
+      icon: <Notifications sx={{ fontSize: 40, color: colors.text.accent }} />,
       title: 'Smart Reminders',
       description: 'Receive intelligent notifications for upcoming prayer times and scheduled tasks to ensure you stay on track.'
     },
     {
-      icon: <EmojiEvents sx={{ fontSize: 40, color: '#0f766e' }} />,
+      icon: <EmojiEvents sx={{ fontSize: 40, color: colors.text.accent }} />,
       title: 'Personal Challenges',
       description: 'Set personal goals like consistent prayer or completing specific tasks to build positive habits and spiritual growth.'
     },
     {
-      icon: <Groups sx={{ fontSize: 40, color: '#0f766e' }} />,
+      icon: <Groups sx={{ fontSize: 40, color: colors.text.accent }} />,
       title: 'Group Challenges',
       description: 'Join or create groups to participate in challenges with friends and community members for accountability.'
     },
     {
-      icon: <Analytics sx={{ fontSize: 40, color: '#0f766e' }} />,
+      icon: <Analytics sx={{ fontSize: 40, color: colors.text.accent }} />,
       title: 'Daily Performance Score',
       description: 'Get a daily score out of 100 based on completed prayers and tasks, providing clear performance indicators.'
     }
   ];
 
   const stats = [
-    { label: 'Active Users', value: '50K+', icon: <Groups sx={{ color: '#0f766e' }} /> },
-    { label: 'Prayers Tracked', value: '2M+', icon: <Mosque sx={{ color: '#0f766e' }} /> },
-    { label: 'Tasks Completed', value: '1.5M+', icon: <CheckCircle sx={{ color: '#0f766e' }} /> },
-    { label: 'Success Rate', value: '94%', icon: <TrendingUp sx={{ color: '#0f766e' }} /> }
+    { label: 'Active Users', value: '50K+', icon: <Groups sx={{ color: colors.text.accent }} /> },
+    { label: 'Prayers Tracked', value: '2M+', icon: <Mosque sx={{ color: colors.text.accent }} /> },
+    { label: 'Tasks Completed', value: '1.5M+', icon: <CheckCircle sx={{ color: colors.text.accent }} /> },
+    { label: 'Success Rate', value: '94%', icon: <TrendingUp sx={{ color: colors.text.accent }} /> }
   ];
 
   return (
     <Box
       sx={{
-        background: 'linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 50%, #e6fffa 100%)',
+        background: gradients.background.primary,
         minHeight: '100vh'
       }}
     >
@@ -75,20 +78,20 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
             component="h1"
             sx={{
               fontWeight: 'bold',
-              color: '#042f2e',
+              color: colors.text.primary,
               mb: 3,
               fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
               fontFamily: 'Inter, sans-serif'
             }}
           >
             Transform Your{' '}
-            <span style={{ color: '#0f766e' }}>Spiritual Journey</span>
+            <span style={{ color: colors.text.accent }}>Spiritual Journey</span>
           </Typography>
           
           <Typography
             variant="h5"
             sx={{
-              color: '#134e4a',
+              color: colors.text.secondary,
               mb: 6,
               maxWidth: 800,
               mx: 'auto',
@@ -102,11 +105,11 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
 
           <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Button
-              onClick={onRegisterClick}
+              onClick={() => navigate('/register')}
               variant="contained"
               size="large"
               sx={{
-                backgroundColor: '#0f766e',
+                backgroundColor: colors.primary.main, // sky-600
                 color: 'white',
                 px: 6,
                 py: 2,
@@ -114,11 +117,11 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                 fontWeight: 600,
                 borderRadius: 3,
                 textTransform: 'none',
-                boxShadow: '0 8px 24px rgba(15, 118, 110, 0.3)',
+                boxShadow: shadows.button.default,
                 '&:hover': {
-                  backgroundColor: '#115e59',
+                  backgroundColor: colors.primary.dark, // sky-900
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 12px 32px rgba(15, 118, 110, 0.4)'
+                  boxShadow: shadows.button.hover
                 },
                 transition: 'all 0.3s ease'
               }}
@@ -127,12 +130,12 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
             </Button>
             
             <Button
-              onClick={onLoginClick}
+              onClick={() => navigate('/login')}
               variant="outlined"
               size="large"
               sx={{
-                borderColor: '#0f766e',
-                color: '#0f766e',
+                borderColor: colors.text.accent, // sky-600
+                color: colors.text.accent,
                 px: 6,
                 py: 2,
                 fontSize: '1.1rem',
@@ -141,8 +144,8 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                 textTransform: 'none',
                 borderWidth: 2,
                 '&:hover': {
-                  borderColor: '#115e59',
-                  backgroundColor: 'rgba(15, 118, 110, 0.05)',
+                  borderColor: colors.primary.dark, // sky-900
+                  backgroundColor: 'rgba(2, 132, 199, 0.05)',
                   borderWidth: 2
                 }
               }}
@@ -156,12 +159,14 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
         <Paper
           elevation={0}
           sx={{
-            background: 'rgba(255, 255, 255, 0.8)',
-            border: '2px solid #a7f3d0',
+            background: 'rgba(255, 255, 255, 0.75)', // white/75
+            border: `1px solid ${colors.border.main}`, // sky-300
             borderRadius: 4,
             p: 4,
             mb: 12,
-            backdropFilter: 'blur(10px)'
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            boxShadow: shadows.card.default
           }}
         >
           <Grid container spacing={4}>
@@ -170,7 +175,7 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                 <Box sx={{ textAlign: 'center' }}>
                   <Avatar
                     sx={{
-                      backgroundColor: '#ecfdf5',
+                      backgroundColor: colors.secondary.lighter, // sky-100
                       width: 60,
                       height: 60,
                       mx: 'auto',
@@ -183,7 +188,7 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                     variant="h4"
                     sx={{
                       fontWeight: 'bold',
-                      color: '#042f2e',
+                      color: colors.text.primary,
                       mb: 1
                     }}
                   >
@@ -191,7 +196,7 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                   </Typography>
                   <Typography
                     variant="body1"
-                    sx={{ color: '#134e4a', fontWeight: 500 }}
+                    sx={{ color: colors.text.secondary, fontWeight: 500 }}
                   >
                     {stat.label}
                   </Typography>
@@ -209,19 +214,19 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
             sx={{
               textAlign: 'center',
               fontWeight: 'bold',
-              color: '#042f2e',
+              color: colors.text.primary,
               mb: 3
             }}
           >
             Powerful Features for{' '}
-            <span style={{ color: '#0f766e' }}>Spiritual Growth</span>
+            <span style={{ color: colors.text.accent }}>Spiritual Growth</span>
           </Typography>
           
           <Typography
             variant="h6"
             sx={{
               textAlign: 'center',
-              color: '#134e4a',
+              color: colors.text.secondary,
               mb: 8,
               maxWidth: 600,
               mx: 'auto'
@@ -237,21 +242,23 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                   elevation={0}
                   sx={{
                     height: '100%',
-                    background: 'rgba(255, 255, 255, 0.85)',
-                    border: '2px solid #a7f3d0',
+                    background: 'rgba(255, 255, 255, 0.75)', // white/75
+                    border: `1px solid ${colors.border.main}`, // sky-300
                     borderRadius: 3,
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       transform: 'translateY(-8px)',
-                      boxShadow: '0 20px 40px rgba(15, 118, 110, 0.15)',
-                      borderColor: '#6ee7b7'
+                      boxShadow: shadows.card.hover,
+                      borderColor: colors.border.hover // sky-500
                     }
                   }}
                 >
                   <CardContent sx={{ p: 4, textAlign: 'center' }}>
                     <Avatar
                       sx={{
-                        backgroundColor: '#ecfdf5',
+                        backgroundColor: colors.secondary.lighter, // sky-100
                         width: 80,
                         height: 80,
                         mx: 'auto',
@@ -266,7 +273,7 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                       component="h3"
                       sx={{
                         fontWeight: 'bold',
-                        color: '#042f2e',
+                        color: colors.text.primary,
                         mb: 2
                       }}
                     >
@@ -276,7 +283,7 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                     <Typography
                       variant="body1"
                       sx={{
-                        color: '#134e4a',
+                        color: colors.text.secondary,
                         lineHeight: 1.6
                       }}
                     >
@@ -293,11 +300,12 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
         <Paper
           elevation={0}
           sx={{
-            background: 'linear-gradient(135deg, #0f766e 0%, #115e59 100%)',
+            backgroundColor: colors.primary.main, // solid sky-600
             color: 'white',
             borderRadius: 4,
             p: 8,
-            textAlign: 'center'
+            textAlign: 'center',
+            boxShadow: shadows.lg
           }}
         >
           <Typography
@@ -315,7 +323,7 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
             variant="h6"
             sx={{
               mb: 6,
-              opacity: 0.9,
+              opacity: 0.95,
               maxWidth: 600,
               mx: 'auto'
             }}
@@ -325,21 +333,23 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
 
           <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Button
-              onClick={onRegisterClick}
+              onClick={() => navigate('/register')}
               variant="contained"
               size="large"
               sx={{
-                backgroundColor: '#14b8a6',
-                color: 'white',
+                backgroundColor: 'white',
+                color: colors.text.accent, // sky-600
                 px: 6,
                 py: 2.5,
                 fontSize: '1.1rem',
                 fontWeight: 600,
                 borderRadius: 3,
                 textTransform: 'none',
+                boxShadow: '0 4px 14px rgba(255, 255, 255, 0.25)',
                 '&:hover': {
-                  backgroundColor: '#0f766e',
-                  transform: 'translateY(-2px)'
+                  backgroundColor: '#f0f9ff', // sky-50
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 20px rgba(255, 255, 255, 0.35)',
                 }
               }}
             >
@@ -353,7 +363,8 @@ const Home = ({ onLoginClick, onRegisterClick }) => {
                 color: 'white',
                 fontSize: '1rem',
                 py: 3,
-                px: 2
+                px: 2,
+                fontWeight: 500
               }}
             />
           </Box>

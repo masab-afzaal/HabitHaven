@@ -83,7 +83,7 @@ const TaskComponent = () => {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const result = await taskService.getAllTasks(token);
+      const result = await taskService.getAllTasks();
       if (result.success) {
         setTasks(result.data || []);
         calculateStats(result.data || []);
@@ -141,9 +141,9 @@ const TaskComponent = () => {
           setLoading(false);
           return;
         }
-        result = await taskService.updateTask(token, editingTask._id, formData);
+        result = await taskService.updateTask(editingTask._id, formData);
       } else {
-        result = await taskService.createTask(token, formData);
+        result = await taskService.createTask(formData);
       }
 
       if (result.success) {
@@ -171,7 +171,7 @@ const TaskComponent = () => {
 
     setLoading(true);
     try {
-      const result = await taskService.deleteTask(token, taskId);
+      const result = await taskService.deleteTask(taskId);
       if (result.success) {
         await fetchTasks();
         setError('');
@@ -196,7 +196,7 @@ const TaskComponent = () => {
         return;
       }
 
-      const result = await taskService.markTaskComplete(token, taskId, !currentStatus);
+      const result = await taskService.markTaskComplete(taskId, !currentStatus);
       if (result.success) {
         await fetchTasks();
         setError('');

@@ -62,7 +62,7 @@ const GroupComponent = () => {
   // Fetch all groups
   const fetchAllGroups = async () => {
     try {
-      const result = await groupService.getAllGroups(token);
+      const result = await groupService.getAllGroups();
       if (result.success) {
         setAllGroups(result.data);
         setFilteredGroups(result.data);
@@ -78,7 +78,7 @@ const GroupComponent = () => {
   // Fetch user's groups
   const fetchMyGroups = async () => {
     try {
-      const result = await groupService.getMyGroups(token);
+      const result = await groupService.getMyGroups();
       if (result.success) {
         setMyGroups(result.data);
       } else {
@@ -143,7 +143,7 @@ const GroupComponent = () => {
 
     setCreateLoading(true);
     try {
-      const result = await groupService.createGroup(token, formData);
+      const result = await groupService.createGroup(formData);
       if (result.success) {
         setOpenCreateDialog(false);
         setFormData({ name: '', description: '' });
@@ -163,7 +163,7 @@ const GroupComponent = () => {
   // Join group
   const handleJoinGroup = async (groupId) => {
     try {
-      const result = await groupService.joinGroup(token, groupId);
+      const result = await groupService.joinGroup(groupId);
       if (result.success) {
         await Promise.all([fetchAllGroups(), fetchMyGroups()]);
         setError('');
