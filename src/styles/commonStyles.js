@@ -1,20 +1,14 @@
-/**
- * Azure Peace Theme - Common Reusable Styles
- * Centralized style objects that can be reused across components
- */
+
 
 import { colors } from './colors';
 import { gradients } from './gradients';
 import { shadows } from './shadows';
 
 export const commonStyles = {
-  // Page Background
   pageBackground: {
     background: gradients.background.primary,
     minHeight: '100vh',
   },
-
-  // Frosted Glass Card
   frostedGlassCard: {
     background: 'rgba(255, 255, 255, 0.75)', // white/75
     backdropFilter: 'blur(8px)',
@@ -22,8 +16,6 @@ export const commonStyles = {
     border: `1px solid ${colors.border.main}`, // sky-300
     borderRadius: 4,
   },
-
-  // Standard Card
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.75)',
     backdropFilter: 'blur(8px)',
@@ -35,8 +27,6 @@ export const commonStyles = {
       boxShadow: shadows.card.hover,
     },
   },
-
-  // Primary Button
   primaryButton: {
     backgroundColor: '#0284c7', // sky-600
     color: colors.white,
@@ -59,8 +49,6 @@ export const commonStyles = {
     },
     transition: 'all 0.3s ease',
   },
-
-  // Outlined Button
   outlinedButton: {
     borderColor: colors.primary.main,
     color: colors.primary.main,
@@ -74,8 +62,6 @@ export const commonStyles = {
       backgroundColor: 'rgba(2, 132, 199, 0.05)',
     },
   },
-
-  // Text Field
   textField: {
     '& .MuiOutlinedInput-root': {
       borderRadius: 2,
@@ -97,14 +83,10 @@ export const commonStyles = {
       },
     },
   },
-
-  // Avatar with Gradient
   avatarGradient: {
     background: gradients.primary.main,
     boxShadow: shadows.avatar,
   },
-
-  // Loading Screen
   loadingScreen: {
     minHeight: '100vh',
     background: gradients.background.main,
@@ -112,79 +94,57 @@ export const commonStyles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-  // Icon Button
   iconButton: {
     color: colors.primary.main,
     '&:hover': {
       backgroundColor: 'rgba(2, 132, 199, 0.08)',
     },
   },
-
-  // Chip
   chip: {
     backgroundColor: colors.secondary.lighter,
     color: colors.primary.main,
     fontWeight: 500,
     borderRadius: 2,
   },
-
-  // Divider
   divider: {
     borderColor: colors.border.main,
     my: 3,
   },
-
-  // Paper Container
   paperContainer: {
     background: colors.background.paper,
     border: `2px solid ${colors.border.main}`,
     borderRadius: 4,
     backdropFilter: 'blur(10px)',
   },
-
-  // Section Title
   sectionTitle: {
     fontWeight: 'bold',
     color: colors.text.primary,
     mb: 2,
   },
-
-  // Accent Text
   accentText: {
     color: colors.text.accent,
     fontWeight: 500,
   },
-
-  // App Bar
   appBar: {
     background: gradients.primary.main,
     boxShadow: `0 4px 20px rgba(2, 132, 199, 0.2)`,
   },
-
-  // Centered Content
   centeredContent: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
   },
-
-  // Flex Row
   flexRow: {
     display: 'flex',
     alignItems: 'center',
     gap: 2,
   },
-
-  // Flex Column
   flexColumn: {
     display: 'flex',
     flexDirection: 'column',
     gap: 2,
   },
-
-  // Hover Card Effect
   hoverCard: {
     transition: 'all 0.3s ease',
     '&:hover': {
@@ -192,8 +152,6 @@ export const commonStyles = {
       boxShadow: shadows.lg,
     },
   },
-
-  // Success Badge
   successBadge: {
     backgroundColor: colors.status.success.light,
     color: colors.status.success.dark,
@@ -201,8 +159,6 @@ export const commonStyles = {
     borderRadius: 2,
     fontWeight: 600,
   },
-
-  // Error Badge
   errorBadge: {
     backgroundColor: colors.status.error.light,
     color: colors.status.error.dark,
@@ -210,13 +166,9 @@ export const commonStyles = {
     borderRadius: 2,
     fontWeight: 600,
   },
-
-  // Input Adornment Icon
   inputAdornmentIcon: {
     color: colors.primary.main,
   },
-
-  // Alert Message
   alertMessage: {
     borderRadius: 2,
     '& .MuiAlert-icon': {

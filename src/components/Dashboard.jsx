@@ -219,65 +219,115 @@ const Dashboard = () => {
 
     return (
       <Box>
-        {/* Header Section */}
+        
         <Box sx={{ mb: 4 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 2 }}>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', color: colors.text.primary }}>
               Dashboard Overview
             </Typography>
-            <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+            <Typography variant="h6" sx={{ color: colors.text.secondary }}>
               Welcome back, {user?.fullName || user?.username}!
             </Typography>
           </Box>
-          <Typography variant="h6" color="text.secondary">
+          <Typography variant="body1" color="text.secondary">
             Here's your spiritual journey overview for today
           </Typography>
         </Box>
 
-        {/* Stats Cards */}
+        
         <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card sx={{ backgroundColor: colors.primary.main, color: 'white', boxShadow: shadows.card.default }}>
+            <Card sx={{ 
+              ...commonStyles.frostedGlassCard,
+              border: `2px solid ${colors.border.main}`,
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: shadows.large,
+                transition: 'all 0.3s ease'
+              }
+            }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: colors.primary.main }}>
                       {completedMandatory}/{mandatoryPrayers.length}
                     </Typography>
-                    <Typography variant="body2" sx={{ opacity: 0.95 }}>
+                    <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
                       Today's Prayers
                     </Typography>
                   </Box>
-                  <Mosque sx={{ fontSize: 40, opacity: 0.9 }} />
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: `linear-gradient(135deg, ${colors.primary.main}, ${colors.primary.dark})`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: shadows.medium
+                    }}
+                  >
+                    <Mosque sx={{ fontSize: 32, color: 'white' }} />
+                  </Box>
                 </Box>
                 <LinearProgress
                   variant="determinate"
                   value={mandatoryPrayers.length > 0 ? (completedMandatory / mandatoryPrayers.length) * 100 : 0}
                   sx={{
                     mt: 2,
-                    backgroundColor: 'rgba(255,255,255,0.25)',
-                    '& .MuiLinearProgress-bar': { backgroundColor: 'rgba(255,255,255,0.95)' }
+                    height: 8,
+                    borderRadius: 4,
+                    backgroundColor: colors.background.secondary,
+                    '& .MuiLinearProgress-bar': { 
+                      backgroundColor: colors.primary.main,
+                      borderRadius: 4
+                    }
                   }}
                 />
+                <Typography variant="caption" sx={{ mt: 1, display: 'block', color: colors.text.secondary }}>
+                  {mandatoryPrayers.length > 0 ? Math.round((completedMandatory / mandatoryPrayers.length) * 100) : 0}% Complete
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card sx={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)', color: 'white' }}>
+            <Card sx={{ 
+              ...commonStyles.frostedGlassCard,
+              border: `2px solid #93c5fd`,
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: shadows.large,
+                transition: 'all 0.3s ease'
+              }
+            }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#3b82f6' }}>
                       {completedTasks}/{totalTasks}
                     </Typography>
-                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
                       Today's Tasks
                     </Typography>
                   </Box>
-                  <TaskIcon sx={{ fontSize: 40, opacity: 0.8 }} />
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                    }}
+                  >
+                    <TaskIcon sx={{ fontSize: 32, color: 'white' }} />
+                  </Box>
                 </Box>
-                <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
+                <Typography variant="caption" sx={{ mt: 2, display: 'block', color: colors.text.secondary }}>
                   {completedTasks} completed today
                 </Typography>
               </CardContent>
@@ -285,41 +335,83 @@ const Dashboard = () => {
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card sx={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: 'white' }}>
+            <Card sx={{ 
+              ...commonStyles.frostedGlassCard,
+              border: `2px solid #fcd34d`,
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: shadows.large,
+                transition: 'all 0.3s ease'
+              }
+            }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#f59e0b' }}>
                       {user?.streakCount || 0}
                     </Typography>
-                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
                       Day Streak
                     </Typography>
                   </Box>
-                  <TrendingUp sx={{ fontSize: 40, opacity: 0.8 }} />
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
+                    }}
+                  >
+                    <TrendingUp sx={{ fontSize: 32, color: 'white' }} />
+                  </Box>
                 </Box>
-                <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
-                  Keep it up!
+                <Typography variant="caption" sx={{ mt: 2, display: 'block', color: colors.text.secondary }}>
+                  {user?.streakCount >= 7 ? 'Amazing streak!' : 'Keep it up!'}
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card sx={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)', color: 'white' }}>
+            <Card sx={{ 
+              ...commonStyles.frostedGlassCard,
+              border: `2px solid #c4b5fd`,
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: shadows.large,
+                transition: 'all 0.3s ease'
+              }
+            }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                      Level {user?.level || 1}
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#8b5cf6' }}>
+                      {user?.level || 1}
                     </Typography>
-                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
                       Current Level
                     </Typography>
                   </Box>
-                  <Star sx={{ fontSize: 40, opacity: 0.8 }} />
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)'
+                    }}
+                  >
+                    <Star sx={{ fontSize: 32, color: 'white' }} />
+                  </Box>
                 </Box>
-                <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
+                <Typography variant="caption" sx={{ mt: 2, display: 'block', color: colors.text.secondary }}>
                   XP: {user?.xp || 0}
                 </Typography>
               </CardContent>
@@ -327,23 +419,33 @@ const Dashboard = () => {
           </Grid>
         </Grid>
 
-        {/* Recent Activity */}
-        <Card>
+        
+        <Card sx={{ ...commonStyles.frostedGlassCard, border: `1px solid ${colors.border.light}` }}>
           <CardContent>
-            <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold', color: colors.text.primary }}>
               Recent Activity
             </Typography>
             <Grid container spacing={2}>
               {safePrayers.filter(p => p.isCompleted).slice(-3).map((prayer) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={prayer._id}>
-                  <Paper sx={{ p: 2, backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+                  <Paper sx={{ 
+                    p: 2, 
+                    backgroundColor: '#f0fdf4', 
+                    border: '1px solid #bbf7d0',
+                    borderRadius: 2,
+                    '&:hover': {
+                      boxShadow: shadows.medium,
+                      transform: 'translateY(-2px)',
+                      transition: 'all 0.2s ease'
+                    }
+                  }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <CheckCircle sx={{ color: '#16a34a' }} />
+                      <CheckCircle sx={{ color: '#16a34a', fontSize: 24 }} />
                       <Box>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#166534' }}>
                           {prayer.prayerName} completed
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: '#15803d' }}>
                           Today
                         </Typography>
                       </Box>
@@ -354,14 +456,24 @@ const Dashboard = () => {
 
               {safeTasks.filter(t => t.isCompleted).slice(-2).map((task) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={task._id}>
-                  <Paper sx={{ p: 2, backgroundColor: '#eff6ff', border: '1px solid #bfdbfe' }}>
+                  <Paper sx={{ 
+                    p: 2, 
+                    backgroundColor: '#eff6ff', 
+                    border: '1px solid #bfdbfe',
+                    borderRadius: 2,
+                    '&:hover': {
+                      boxShadow: shadows.medium,
+                      transform: 'translateY(-2px)',
+                      transition: 'all 0.2s ease'
+                    }
+                  }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <CheckCircle sx={{ color: '#2563eb' }} />
+                      <CheckCircle sx={{ color: '#2563eb', fontSize: 24 }} />
                       <Box>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#1e40af' }}>
                           {task.title} completed
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: '#1d4ed8' }}>
                           {new Date(task.date).toLocaleDateString()}
                         </Typography>
                       </Box>
@@ -372,9 +484,12 @@ const Dashboard = () => {
             </Grid>
 
             {safePrayers.filter(p => p.isCompleted).length === 0 && safeTasks.filter(t => t.isCompleted).length === 0 && (
-              <Box sx={{ textAlign: 'center', py: 4 }}>
-                <Typography variant="body1" color="text.secondary">
-                  No recent activity. Complete some prayers or tasks to see them here!
+              <Box sx={{ textAlign: 'center', py: 6 }}>
+                <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                  No recent activity yet
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Complete some prayers or tasks to see them here!
                 </Typography>
               </Box>
             )}
@@ -388,12 +503,17 @@ const Dashboard = () => {
   const ChallengesTab = () => {
     return (
       <Box>
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: colors.text.primary }}>
           Challenges
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Challenge features coming soon...
-        </Typography>
+        <Card sx={{ ...commonStyles.frostedGlassCard, p: 4, textAlign: 'center' }}>
+          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+            Coming Soon
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Challenge features are under development...
+          </Typography>
+        </Card>
       </Box>
     );
   };
@@ -402,12 +522,17 @@ const Dashboard = () => {
   const SettingsTab = () => {
     return (
       <Box>
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: colors.text.primary }}>
           Settings
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Settings panel coming soon...
-        </Typography>
+        <Card sx={{ ...commonStyles.frostedGlassCard, p: 4, textAlign: 'center' }}>
+          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+            Coming Soon
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Settings panel is under development...
+          </Typography>
+        </Card>
       </Box>
     );
   };
@@ -422,37 +547,36 @@ const Dashboard = () => {
   ];
 
   const drawer = (
-    <Box>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ p: 3, textAlign: 'center' }}>
         <Box
           sx={{
             width: 64,
             height: 64,
-            background: 'rgba(255, 255, 255, 0.75)',
+            background: `linear-gradient(135deg, ${colors.primary.main}, ${colors.primary.dark})`,
             borderRadius: 3,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             mx: 'auto',
             mb: 2,
-            boxShadow: shadows.avatar,
-            border: `1px solid ${colors.border.main}`,
-            backdropFilter: 'blur(8px)'
+            boxShadow: shadows.medium,
+            border: `2px solid ${colors.border.main}`
           }}
         >
-          <Mosque sx={{ color: colors.text.accent, fontSize: 32 }} />
+          <Mosque sx={{ color: 'white', fontSize: 32 }} />
         </Box>
         <Typography variant="h6" sx={{ fontWeight: 'bold', color: colors.text.primary }}>
-          Habit<span style={{ color: colors.text.accent }}>Haven</span>
+          Habit<span style={{ color: colors.primary.main }}>Haven</span>
         </Typography>
-        <Typography variant="body2" sx={{ color: colors.text.secondary }}>
+        <Typography variant="body2" sx={{ color: colors.text.secondary, mt: 0.5 }}>
           Welcome, {user?.username}!
         </Typography>
       </Box>
       
       <Divider sx={{ borderColor: colors.border.light }} />
       
-      <List sx={{ px: 2, py: 1 }}>
+      <List sx={{ px: 2, py: 2, flex: 1 }}>
         {menuItems.map((item) => (
           <ListItem
             component="button"
@@ -464,20 +588,23 @@ const Dashboard = () => {
             sx={{
               borderRadius: 2,
               mb: 0.5,
-              backgroundColor: activeTab === item.id ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
+              backgroundColor: activeTab === item.id ? `${colors.primary.main}15` : 'transparent',
+              border: activeTab === item.id ? `2px solid ${colors.primary.main}` : '2px solid transparent',
               '&:hover': {
-                backgroundColor: activeTab === item.id ? 'rgba(20, 184, 166, 0.15)' : 'rgba(0, 0, 0, 0.04)',
+                backgroundColor: activeTab === item.id ? `${colors.primary.main}20` : 'rgba(0, 0, 0, 0.04)',
+                transform: 'translateX(4px)',
+                transition: 'all 0.2s ease'
               }
             }}
           >
-            <ListItemIcon sx={{ color: activeTab === item.id ? 'teal.600' : 'text.secondary' }}>
+            <ListItemIcon sx={{ color: activeTab === item.id ? colors.primary.main : colors.text.secondary, minWidth: 40 }}>
               {item.icon}
             </ListItemIcon>
             <ListItemText 
               primary={item.label}
               sx={{ 
                 '& .MuiListItemText-primary': {
-                  color: activeTab === item.id ? 'teal.700' : 'text.primary',
+                  color: activeTab === item.id ? colors.primary.main : colors.text.primary,
                   fontWeight: activeTab === item.id ? 600 : 400
                 }
               }}
@@ -486,18 +613,21 @@ const Dashboard = () => {
         ))}
       </List>
       
-      <Box sx={{ position: 'absolute', bottom: 16, left: 16, right: 16 }}>
+      <Box sx={{ p: 2 }}>
         <Button
           fullWidth
           startIcon={<LogoutIcon />}
           onClick={logout}
           variant="outlined"
           sx={{
-            borderColor: 'rgba(239, 68, 68, 0.3)',
-            color: 'error.main',
+            borderColor: 'rgba(239, 68, 68, 0.4)',
+            color: '#dc2626',
+            borderWidth: 2,
+            py: 1.5,
             '&:hover': {
-              borderColor: 'error.main',
-              backgroundColor: 'rgba(239, 68, 68, 0.05)'
+              borderColor: '#dc2626',
+              backgroundColor: 'rgba(239, 68, 68, 0.05)',
+              borderWidth: 2
             }
           }}
         >
@@ -555,19 +685,28 @@ const Dashboard = () => {
       }}
     >
       {isMobile && (
-        <AppBar position="fixed" sx={{ backgroundColor: 'white', color: 'text.primary' }}>
+        <AppBar 
+          position="fixed" 
+          sx={{ 
+            backgroundColor: 'rgba(248, 250, 252, 0.95)',
+            backdropFilter: 'blur(10px)',
+            color: colors.text.primary,
+            boxShadow: shadows.small,
+            borderBottom: `1px solid ${colors.border.light}`
+          }}
+        >
           <Toolbar>
             <IconButton
               edge="start"
               onClick={() => setMobileOpen(true)}
-              sx={{ mr: 2 }}
+              sx={{ mr: 2, color: colors.primary.main }}
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-              HabitHaven
+            <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold', color: colors.text.primary }}>
+              Habit<span style={{ color: colors.primary.main }}>Haven</span>
             </Typography>
-            <IconButton>
+            <IconButton sx={{ color: colors.primary.main }}>
               <Notifications />
             </IconButton>
           </Toolbar>
@@ -587,8 +726,9 @@ const Dashboard = () => {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
-              backgroundColor: 'white',
-              borderRight: '1px solid rgba(0, 0, 0, 0.05)'
+              backgroundColor: 'rgba(248, 250, 252, 0.98)',
+              backdropFilter: 'blur(10px)',
+              borderRight: `1px solid ${colors.border.light}`
             },
           }}
         >

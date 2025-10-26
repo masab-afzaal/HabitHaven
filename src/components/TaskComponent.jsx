@@ -50,6 +50,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import taskService from '../services/taskService';
+import { colors, gradients, shadows, commonStyles, taskStyles } from '../styles';
 
 const TaskComponent = () => {
   const { token, user } = useAuth();
@@ -294,17 +295,17 @@ const TaskComponent = () => {
 
   return (
     <Box>
-      {/* Error Display */}
+      
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>
           {error}
         </Alert>
       )}
 
-      {/* Header Section */}
+      
       <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 2 }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', color: colors.text.primary }}>
             Task Manager
           </Typography>
           <Box sx={{ display: 'flex', gap: 1 }}>
@@ -313,6 +314,16 @@ const TaskComponent = () => {
               startIcon={<Refresh />}
               variant="outlined"
               disabled={loading}
+              sx={{ 
+                borderColor: colors.primary.main,
+                color: colors.primary.main,
+                borderWidth: 2,
+                '&:hover': { 
+                  borderColor: colors.primary.dark,
+                  backgroundColor: `${colors.primary.main}10`,
+                  borderWidth: 2
+                }
+              }}
             >
               Refresh
             </Button>
@@ -321,92 +332,183 @@ const TaskComponent = () => {
               startIcon={<AddIcon />}
               variant="contained"
               disabled={loading}
+              sx={{ 
+                ...commonStyles.primaryButton,
+                '&.Mui-disabled': {
+                  background: colors.background.secondary,
+                  color: colors.text.secondary
+                }
+              }}
             >
               Add Task
             </Button>
           </Box>
         </Box>
-        <Typography variant="h6" color="text.secondary">
+        <Typography variant="body1" color="text.secondary">
           Organize and track your daily tasks efficiently
         </Typography>
       </Box>
 
-      {/* Stats Cards */}
+      
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card sx={{ background: 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)', color: 'white' }}>
+          <Card sx={{ 
+            ...commonStyles.frostedGlassCard,
+            border: '2px solid #93c5fd',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: shadows.large,
+              transition: 'all 0.3s ease'
+            }
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#2196f3' }}>
                     {stats.total}
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
                     Total Tasks
                   </Typography>
                 </Box>
-                <Assignment sx={{ fontSize: 40, opacity: 0.8 }} />
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 2,
+                    background: 'linear-gradient(135deg, #2196f3, #1976d2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)'
+                  }}
+                >
+                  <Assignment sx={{ fontSize: 32, color: 'white' }} />
+                </Box>
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card sx={{ background: 'linear-gradient(135deg, #4caf50 0%, #388e3c 100%)', color: 'white' }}>
+          <Card sx={{ 
+            ...commonStyles.frostedGlassCard,
+            border: '2px solid #86efac',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: shadows.large,
+              transition: 'all 0.3s ease'
+            }
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
                     {stats.completed}
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
                     Completed
                   </Typography>
                 </Box>
-                <TaskAlt sx={{ fontSize: 40, opacity: 0.8 }} />
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 2,
+                    background: 'linear-gradient(135deg, #4caf50, #388e3c)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)'
+                  }}
+                >
+                  <TaskAlt sx={{ fontSize: 32, color: 'white' }} />
+                </Box>
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card sx={{ background: 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)', color: 'white' }}>
+          <Card sx={{ 
+            ...commonStyles.frostedGlassCard,
+            border: '2px solid #fdba74',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: shadows.large,
+              transition: 'all 0.3s ease'
+            }
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
                     {stats.pending}
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
                     Pending
                   </Typography>
                 </Box>
-                <Schedule sx={{ fontSize: 40, opacity: 0.8 }} />
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 2,
+                    background: 'linear-gradient(135deg, #ff9800, #f57c00)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(255, 152, 0, 0.3)'
+                  }}
+                >
+                  <Schedule sx={{ fontSize: 32, color: 'white' }} />
+                </Box>
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card sx={{ background: 'linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%)', color: 'white' }}>
+          <Card sx={{ 
+            ...commonStyles.frostedGlassCard,
+            border: '2px solid #d8b4fe',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: shadows.large,
+              transition: 'all 0.3s ease'
+            }
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#9c27b0' }}>
                     {stats.completionRate}%
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
                     Completion Rate
                   </Typography>
                 </Box>
-                <TrendingUp sx={{ fontSize: 40, opacity: 0.8 }} />
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 2,
+                    background: 'linear-gradient(135deg, #9c27b0, #7b1fa2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(156, 39, 176, 0.3)'
+                  }}
+                >
+                  <TrendingUp sx={{ fontSize: 32, color: 'white' }} />
+                </Box>
               </Box>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
 
-      {/* Filters */}
+      
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -444,7 +546,7 @@ const TaskComponent = () => {
         </CardContent>
       </Card>
 
-      {/* Task List */}
+      
       <Card>
         <CardContent>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
@@ -545,7 +647,7 @@ const TaskComponent = () => {
         </CardContent>
       </Card>
 
-      {/* Context Menu */}
+      
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -567,7 +669,7 @@ const TaskComponent = () => {
         </MenuList>
       </Menu>
 
-      {/* Create/Edit Dialog */}
+      
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
         <DialogTitle>
           {editingTask ? 'Edit Task' : 'Create New Task'}

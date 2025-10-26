@@ -47,12 +47,10 @@ const Login = () => {
     setError('');
     setLoading(true);
 
-    console.log('Attempting login with:', formData.email);
     const result = await login(formData.email, formData.password);
-    console.log('Login result:', result);
     
     if (result.success) {
-      console.log('Login successful, should redirect to dashboard');
+      navigate('/dashboard');
     } else {
       setError(result.error);
     }
@@ -80,7 +78,7 @@ const Login = () => {
             position: 'relative'
           }}
         >
-          {/* Back Button */}
+          
           <IconButton
             onClick={() => navigate('/')}
             sx={{
@@ -93,7 +91,7 @@ const Login = () => {
             <ArrowBack />
           </IconButton>
 
-          {/* Header */}
+          
           <Box sx={{ textAlign: 'center', mb: 4, mt: 2 }}>
             <Avatar
               sx={{
@@ -131,7 +129,7 @@ const Login = () => {
             </Typography>
           </Box>
 
-          {/* Error Alert */}
+          
           {error && (
             <Alert 
               severity="error" 
@@ -147,7 +145,7 @@ const Login = () => {
             </Alert>
           )}
 
-          {/* Login Form */}
+          
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth

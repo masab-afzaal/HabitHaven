@@ -21,7 +21,8 @@ import {
   Analytics,
   CheckCircle,
   TrendingUp,
-  Schedule
+  Schedule,
+  AutoAwesome
 } from '@mui/icons-material';
 import { colors, gradients, shadows, commonStyles } from '../styles';
 
@@ -38,6 +39,11 @@ const Home = () => {
       icon: <Notifications sx={{ fontSize: 40, color: colors.text.accent }} />,
       title: 'Smart Reminders',
       description: 'Receive intelligent notifications for upcoming prayer times and scheduled tasks to ensure you stay on track.'
+    },
+    {
+      icon: <AutoAwesome sx={{ fontSize: 40, color: colors.text.accent }} />,
+      title: 'AI-Powered Insights',
+      description: 'Get personalized recommendations and insights powered by AI to optimize your spiritual routine and productivity patterns.'
     },
     {
       icon: <EmojiEvents sx={{ fontSize: 40, color: colors.text.accent }} />,
@@ -70,7 +76,7 @@ const Home = () => {
         minHeight: '100vh'
       }}
     >
-      {/* Hero Section */}
+      
       <Container maxWidth="xl" sx={{ pt: 8, pb: 12 }}>
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Typography
@@ -155,7 +161,7 @@ const Home = () => {
           </Box>
         </Box>
 
-        {/* Stats Section */}
+        
         <Paper
           elevation={0}
           sx={{
@@ -206,7 +212,7 @@ const Home = () => {
           </Grid>
         </Paper>
 
-        {/* Features Section */}
+        
         <Box sx={{ mb: 12 }}>
           <Typography
             variant="h3"
@@ -296,16 +302,29 @@ const Home = () => {
           </Grid>
         </Box>
 
-        {/* CTA Section */}
+        
         <Paper
           elevation={0}
           sx={{
-            backgroundColor: colors.primary.main, // solid sky-600
-            color: 'white',
+            background: 'rgba(255, 255, 255, 0.85)', // Frosted glass effect
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: `2px solid ${colors.border.main}`, // sky-300 border
             borderRadius: 4,
             p: 8,
             textAlign: 'center',
-            boxShadow: shadows.lg
+            boxShadow: shadows.lg,
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '4px',
+              background: `linear-gradient(90deg, ${colors.primary.main}, ${colors.primary.dark})`,
+            }
           }}
         >
           <Typography
@@ -313,7 +332,12 @@ const Home = () => {
             component="h2"
             sx={{
               fontWeight: 'bold',
-              mb: 3
+              mb: 3,
+              color: colors.text.primary,
+              background: `linear-gradient(135deg, ${colors.primary.main}, ${colors.primary.dark})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
             }}
           >
             Ready to Begin Your Journey?
@@ -323,33 +347,32 @@ const Home = () => {
             variant="h6"
             sx={{
               mb: 6,
-              opacity: 0.95,
+              color: colors.text.secondary,
               maxWidth: 600,
-              mx: 'auto'
+              mx: 'auto',
+              lineHeight: 1.7,
+              fontWeight: 400
             }}
           >
             Join thousands of Muslims who are transforming their spiritual lives and building productive habits with HabitHaven
           </Typography>
 
-          <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
             <Button
               onClick={() => navigate('/register')}
               variant="contained"
               size="large"
               sx={{
-                backgroundColor: 'white',
-                color: colors.text.accent, // sky-600
-                px: 6,
+                ...commonStyles.primaryButton,
+                px: 7,
                 py: 2.5,
                 fontSize: '1.1rem',
                 fontWeight: 600,
                 borderRadius: 3,
                 textTransform: 'none',
-                boxShadow: '0 4px 14px rgba(255, 255, 255, 0.25)',
                 '&:hover': {
-                  backgroundColor: '#f0f9ff', // sky-50
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 6px 20px rgba(255, 255, 255, 0.35)',
+                  transform: 'translateY(-3px)',
+                  boxShadow: shadows.button.hover,
                 }
               }}
             >
@@ -357,14 +380,19 @@ const Home = () => {
             </Button>
             
             <Chip
-              label="✓ Free Forever"
+              icon={<CheckCircle sx={{ fontSize: 20, color: colors.primary.main }} />}
+              label="Free Forever • No Credit Card"
               sx={{
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                color: 'white',
-                fontSize: '1rem',
+                backgroundColor: colors.secondary.lighter, // sky-100
+                color: colors.text.primary,
+                fontSize: '0.95rem',
                 py: 3,
                 px: 2,
-                fontWeight: 500
+                fontWeight: 500,
+                border: `1px solid ${colors.border.main}`,
+                '& .MuiChip-icon': {
+                  color: colors.primary.main
+                }
               }}
             />
           </Box>

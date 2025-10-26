@@ -33,7 +33,8 @@ export const AuthProvider = ({ children }) => {
       const result = await authService.getCurrentUser();
       
       if (result.success) {
-        setUser(result.data.data || result.data); // Backend returns user in data field
+        const userData = result.data?.data || result.data?.message || result.data;
+        setUser(userData);
       } else {
         logout();
       }
@@ -51,12 +52,16 @@ export const AuthProvider = ({ children }) => {
       
       if (result.success) {
         const { user, accessToken } = result;
+        
+        if (!accessToken || !user) {
+          return { success: false, error: 'Invalid response from server' };
+        }
+        
         setToken(accessToken);
         localStorage.setItem('token', accessToken);
         setUser(user);
         return { success: true };
       } else {
-        // Handle backend error responses
         let errorMessage = 'Login failed';
         if (result.error?.includes('User Not Exists') || result.error?.includes('not exist')) {
           errorMessage = 'User does not exist. Please register first.';
@@ -78,7 +83,6 @@ export const AuthProvider = ({ children }) => {
       const result = await authService.register({ fullName, email, username, password });
       
       if (result.success) {
-        // Auto-login after successful registration
         const loginResult = await login(email, password);
         if (loginResult.success) {
           return { success: true, message: 'Registration successful! Welcome to HabitHaven!' };

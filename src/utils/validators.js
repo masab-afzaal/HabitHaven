@@ -1,12 +1,6 @@
-/**
- * Form validation functions
- */
 
-/**
- * Validate login form
- * @param {Object} values - Form values
- * @returns {Object} Validation errors
- */
+
+
 export const validateLogin = (values) => {
   const errors = {};
 
@@ -25,11 +19,7 @@ export const validateLogin = (values) => {
   return errors;
 };
 
-/**
- * Validate registration form
- * @param {Object} values - Form values
- * @returns {Object} Validation errors
- */
+
 export const validateRegister = (values) => {
   const errors = {};
 
@@ -68,11 +58,7 @@ export const validateRegister = (values) => {
   return errors;
 };
 
-/**
- * Validate task form
- * @param {Object} values - Form values
- * @returns {Object} Validation errors
- */
+
 export const validateTask = (values) => {
   const errors = {};
 
@@ -95,11 +81,7 @@ export const validateTask = (values) => {
   return errors;
 };
 
-/**
- * Validate group form
- * @param {Object} values - Form values
- * @returns {Object} Validation errors
- */
+
 export const validateGroup = (values) => {
   const errors = {};
 

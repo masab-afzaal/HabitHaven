@@ -1,10 +1,6 @@
-/**
- * Azure Peace Theme - Color Palette
- * Centralized color definitions for the entire application
- */
+
 
 export const colors = {
-  // Primary Colors
   primary: {
     main: '#0284c7',      // sky-600
     light: '#38bdf8',     // sky-400
@@ -12,16 +8,12 @@ export const colors = {
     darker: '#082f49',    // sky-950
     contrast: '#ffffff',
   },
-
-  // Secondary Colors
   secondary: {
     main: '#7dd3fc',      // sky-300
     light: '#bae6fd',     // sky-200
     lighter: '#e0f2fe',   // sky-100
     dark: '#0ea5e9',      // sky-500
   },
-
-  // Background Colors
   background: {
     default: '#e0f2fe',   // sky-100
     paper: 'rgba(255, 255, 255, 0.75)', // white/75 for frosted glass
@@ -30,8 +22,6 @@ export const colors = {
       end: '#bae6fd',     // sky-200
     },
   },
-
-  // Text Colors
   text: {
     primary: '#082f49',   // sky-950 (very dark blue, almost black)
     secondary: '#0c4a6e', // sky-900 (dark blue)
@@ -39,8 +29,6 @@ export const colors = {
     muted: '#64748b',     // slate-500
     disabled: '#94a3b8',  // slate-400
   },
-
-  // Status Colors
   status: {
     success: {
       main: '#10b981',
@@ -63,16 +51,12 @@ export const colors = {
       dark: '#075985',
     },
   },
-
-  // Border & Divider
   border: {
     main: '#7dd3fc',      // sky-300
     light: '#bae6fd',     // sky-200
     hover: '#0ea5e9',     // sky-500
     focus: '#0369a1',     // sky-700
   },
-
-  // Special Colors
   white: '#ffffff',
   black: '#000000',
   transparent: 'transparent',

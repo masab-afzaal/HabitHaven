@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react';
 
-/**
- * Custom hook for localStorage management
- * Automatically syncs state with localStorage
- * 
- * @param {string} key - localStorage key
- * @param {*} initialValue - Initial value if no stored value exists
- * @returns {Array} [storedValue, setValue]
- */
+
 export const useLocalStorage = (key, initialValue) => {
   // Get initial value from localStorage or use provided initialValue
   const [storedValue, setStoredValue] = useState(() => {

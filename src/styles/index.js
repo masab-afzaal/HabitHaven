@@ -1,15 +1,18 @@
-/**
- * Azure Peace Theme - Central Style Export
- * Import all styling from this single file
- */
+
 
 export { colors } from './colors';
 export { gradients } from './gradients';
 export { shadows } from './shadows';
 export { commonStyles } from './commonStyles';
-
-// Re-export everything as a single object for convenience
+export { dashboardStyles } from './dashboardStyles';
+export { taskStyles } from './taskStyles';
+export { groupStyles } from './groupStyles';
+export { prayerStyles } from './prayerStyles';
 export { default as Colors } from './colors';
 export { default as Gradients } from './gradients';
 export { default as Shadows } from './shadows';
 export { default as CommonStyles } from './commonStyles';
+export { default as DashboardStyles } from './dashboardStyles';
+export { default as TaskStyles } from './taskStyles';
+export { default as GroupStyles } from './groupStyles';
+export { default as PrayerStyles } from './prayerStyles';

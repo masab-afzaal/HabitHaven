@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Link, Divider } from '@mui/material';
+import { Box, Container, Grid, Typography, Link, Divider, Avatar } from '@mui/material';
 import { Mosque, Facebook, Twitter, Instagram } from '@mui/icons-material';
-import { colors, gradients, shadows } from '../styles';
+import { colors, gradients, shadows, commonStyles } from '../styles';
 
 // Footer Component
 const Footer = () => {
@@ -20,21 +20,15 @@ const Footer = () => {
         <Grid container spacing={6}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Box
+              <Avatar
                 sx={{
+                  ...commonStyles.avatarGradient,
                   width: 56,
-                  height: 56,
-                  background: colors.primary.main,
-                  borderRadius: 3,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)',
-                  border: '1px solid rgba(2, 132, 199, 0.2)',
+                  height: 56
                 }}
               >
-                <Mosque sx={{ color: 'white', fontSize: 32 }} />
-              </Box>
+                <Mosque sx={{ fontSize: 32, color: 'white' }} />
+              </Avatar>
               <Box>
                 <Typography 
                   variant="h4" 

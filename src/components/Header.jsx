@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Box, Container } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, Container, Avatar } from '@mui/material';
 import { Mosque } from '@mui/icons-material';
-import { colors, gradients, shadows } from '../styles';
+import { colors, gradients, shadows, commonStyles } from '../styles';
 
 // Header Component
 const Header = () => {
@@ -18,22 +18,16 @@ const Header = () => {
     >
       <Container maxWidth="xl">
         <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => navigate('/')}>
+            <Avatar
               sx={{
+                ...commonStyles.avatarGradient,
                 width: 48,
-                height: 48,
-                background: colors.primary.main,
-                borderRadius: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)',
-                border: '1px solid rgba(2, 132, 199, 0.2)',
+                height: 48
               }}
             >
-              <Mosque sx={{ color: 'white', fontSize: 28 }} />
-            </Box>
+              <Mosque sx={{ fontSize: 28, color: 'white' }} />
+            </Avatar>
             <Box>
               <Typography 
                 variant="h5" 

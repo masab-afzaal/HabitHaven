@@ -1,16 +1,13 @@
-// API Endpoints Constants
 export const API_ENDPOINTS = {
-  // User/Auth endpoints
   AUTH: {
     LOGIN: '/user/login',
     REGISTER: '/user/register',
     LOGOUT: '/user/logout',
     MY_ACCOUNT: '/user/my-account',
-    UPDATE_ACCOUNT: '/user/update-Account',
-    CHANGE_PASSWORD: '/user/change-Password',
+    UPDATE_ACCOUNT: '/user/update-account',
+    CHANGE_PASSWORD: '/user/change-password',
   },
   
-  // Task endpoints
   TASK: {
     CREATE: '/task/createTask',
     GET_ALL: '/task/allTask',
@@ -20,7 +17,6 @@ export const API_ENDPOINTS = {
     MARK_COMPLETE: (id) => `/task/complete/${id}`,
   },
   
-  // Group endpoints
   GROUP: {
     CREATE: '/group/createGroup',
     JOIN: (id) => `/group/${id}/join`,
@@ -29,8 +25,10 @@ export const API_ENDPOINTS = {
     GET_BY_ID: (id) => `/group/${id}`,
   },
   
-  // Prayer endpoints
   PRAYER: {
+    LOG_PRAYERS: '/prayer/prayers',
+    GET_TODAYS_PRAYERS: '/prayer/prayers/today',
+    TOGGLE_COMPLETE: (id) => `/prayer/${id}/complete`,
     GET_TIMES: '/prayer/prayer-times',
     GET_BY_LOCATION: '/prayer/by-location',
   },

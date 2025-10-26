@@ -1,11 +1,6 @@
 import { useState, useCallback } from 'react';
 
-/**
- * Custom hook for handling async API calls
- * Provides loading state, error handling, and data management
- * 
- * @returns {Object} { data, loading, error, execute, reset }
- */
+
 export const useApi = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
