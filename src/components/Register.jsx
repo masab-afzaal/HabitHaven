@@ -87,8 +87,7 @@ const Register = () => {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        py: 4
+        justifyContent: 'center'
       }}
     >
       <Container maxWidth="sm">
@@ -100,7 +99,6 @@ const Register = () => {
             position: 'relative'
           }}
         >
-          {/* Back Button */}
           <IconButton
             onClick={() => navigate('/')}
             sx={{
@@ -113,7 +111,6 @@ const Register = () => {
             <ArrowBack />
           </IconButton>
 
-          {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4, mt: 2 }}>
             <Avatar
               sx={{
@@ -152,7 +149,6 @@ const Register = () => {
             </Typography>
           </Box>
 
-          {/* Error Alert */}
           {error && (
             <Alert 
               severity="error" 
@@ -168,7 +164,6 @@ const Register = () => {
             </Alert>
           )}
 
-          {/* Register Form */}
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth

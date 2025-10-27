@@ -13,7 +13,7 @@ const Header = () => {
 
   return (
     <AppBar 
-      position="sticky" 
+      
       sx={{ 
         backgroundColor: 'rgba(248, 250, 252, 0.95)',
         backdropFilter: 'blur(10px)',

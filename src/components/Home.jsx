@@ -74,6 +74,7 @@ const Home = () => {
       sx={{
         background: gradients.background.primary,
         minHeight: '100vh'
+        
       }}
     >
       
