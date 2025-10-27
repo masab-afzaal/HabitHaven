@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
+import { authService } from '../services';
 
 // Auth Context
 const AuthContext = createContext();
@@ -16,31 +17,24 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
-
-  const API_BASE = 'http://localhost:5000/api/v1/user';
   
 
 
   useEffect(() => {
-    if (token) {
+    if (token && !user) {
       getCurrentUser();
-    } else {
+    } else if (!token) {
       setLoading(false);
     }
   }, [token]);
 
   const getCurrentUser = async () => {
     try {
-  const response = await fetch(`${API_BASE}/my-account`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const result = await authService.getCurrentUser();
       
-      if (response.ok) {
-        const result = await response.json();
-        setUser(result.data); // Backend returns user in data field
+      if (result.success) {
+        const userData = result.data?.data || result.data?.message || result.data;
+        setUser(userData);
       } else {
         logout();
       }
@@ -54,94 +48,28 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-
+      const result = await authService.login(email, password);
       
-      const response = await fetch(`${API_BASE}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-      
-
-      
-      let result;
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        result = await response.json();
-      } else {
-        // Handle HTML error responses
-        const text = await response.text();
-        result = { message: text.includes('User Not Exists') ? 'User Not Exists' : 'Server Error' };
-      }
-      
-
-      
-      if (response.ok) {
-  
+      if (result.success) {
+        const { user, accessToken } = result;
         
-        // Handle different possible response formats
-        let user, accessToken;
-        
-        // Try multiple possible response formats
-        if (result.data && typeof result.data === 'object') {
-          // ApiResponse format: { statusCode, data: { user, accessToken, refreshToken }, message }
-          user = result.data.user;
-          accessToken = result.data.accessToken;
-
-        } else if (result.user && result.accessToken) {
-          // Direct format: { user, accessToken, refreshToken }
-          user = result.user;
-          accessToken = result.accessToken;
-
-        } else if (result[1] && typeof result[1] === 'object') {
-          // Alternative ApiResponse format: [statusCode, data, message]
-          user = result[1].user;
-          accessToken = result[1].accessToken;
-
-        } else {
-          // Try to find user and accessToken anywhere in the response
-          const findInObject = (obj, key) => {
-            if (obj && typeof obj === 'object') {
-              if (obj[key]) return obj[key];
-              for (let prop in obj) {
-                if (typeof obj[prop] === 'object') {
-                  const found = findInObject(obj[prop], key);
-                  if (found) return found;
-                }
-              }
-            }
-            return null;
-          };
-          
-          user = findInObject(result, 'user');
-          accessToken = findInObject(result, 'accessToken');
-
+        if (!accessToken || !user) {
+          return { success: false, error: 'Invalid response from server' };
         }
         
-
-        
-        if (accessToken && user) {
-          setToken(accessToken);
-          localStorage.setItem('token', accessToken);
-          setUser(user);
-          return { success: true };
-        } else {
-          console.error('Missing token or user in response');
-          console.error('Available keys in result:', Object.keys(result));
-          return { success: false, error: 'Missing authentication data' };
-        }
+        setToken(accessToken);
+        localStorage.setItem('token', accessToken);
+        setUser(user);
+        setLoading(false);
+        return { success: true };
       } else {
-        console.error('Login failed with status:', response.status);
-        // Handle backend error responses
         let errorMessage = 'Login failed';
-        if (result.message === 'User Not Exists') {
+        if (result.error?.includes('User Not Exists') || result.error?.includes('not exist')) {
           errorMessage = 'User does not exist. Please register first.';
-        } else if (result.message === 'Invalid User Credentials') {
+        } else if (result.error?.includes('Invalid') || result.error?.includes('Credentials')) {
           errorMessage = 'Invalid email or password.';
-        } else if (result.message) {
-          errorMessage = result.message;
+        } else if (result.error) {
+          errorMessage = result.error;
         }
         return { success: false, error: errorMessage };
       }
@@ -153,18 +81,9 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (fullName, username, email, password) => {
     try {
-  const response = await fetch(`${API_BASE}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ fullName, email, username, password })
-      });
+      const result = await authService.register({ fullName, email, username, password });
       
-      const result = await response.json();
-      
-      if (response.ok) {
-        // Auto-login after successful registration
+      if (result.success) {
         const loginResult = await login(email, password);
         if (loginResult.success) {
           return { success: true, message: 'Registration successful! Welcome to HabitHaven!' };
@@ -172,7 +91,7 @@ export const AuthProvider = ({ children }) => {
           return { success: true, message: 'Registration successful! Please login.', autoLogin: false };
         }
       } else {
-        return { success: false, error: result.message || 'Registration failed' };
+        return { success: false, error: result.error || 'Registration failed' };
       }
     } catch (error) {
       return { success: false, error: 'Network error' };
@@ -182,13 +101,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       if (token) {
-  await fetch(`${API_BASE}/logout`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        await authService.logout();
       }
     } catch (error) {
       console.error('Logout error:', error);
@@ -201,22 +114,13 @@ export const AuthProvider = ({ children }) => {
 
   const updateAccount = async (updateData) => {
     try {
-  const response = await fetch(`${API_BASE}/update-Account`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updateData)
-      });
+      const result = await authService.updateAccount(updateData);
       
-      const result = await response.json();
-      
-      if (response.ok) {
-        setUser(result.data); // Backend returns updated user in data field
-        return { success: true, message: result.message };
+      if (result.success) {
+        setUser(result.data.data || result.data); // Backend returns updated user in data field
+        return { success: true, message: result.data.message };
       } else {
-        return { success: false, error: result.message };
+        return { success: false, error: result.error };
       }
     } catch (error) {
       return { success: false, error: 'Network error' };
@@ -225,21 +129,12 @@ export const AuthProvider = ({ children }) => {
 
   const changePassword = async (oldPassword, newPassword) => {
     try {
-  const response = await fetch(`${API_BASE}/change-Password`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ oldPassword, newPassword })
-      });
+      const result = await authService.changePassword(oldPassword, newPassword);
       
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, message: result.message };
+      if (result.success) {
+        return { success: true, message: result.data.message };
       } else {
-        return { success: false, error: result.message };
+        return { success: false, error: result.error };
       }
     } catch (error) {
       return { success: false, error: 'Network error' };

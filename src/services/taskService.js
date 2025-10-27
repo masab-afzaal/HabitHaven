@@ -1,165 +1,61 @@
-// Task API Service
-// This file contains all the API calls for task functionality
-// Based on your backend routes: /api/v1/task
-
-const API_BASE =import.meta.env.VITE_API_BASE ;
+import { apiService } from '../api';
+import { API_ENDPOINTS } from '../constants';
 
 export const taskService = {
-  // POST /api/v1/task/createTask - Create a new task
-  createTask: async (token, taskData) => {
-    try {
-      const response = await fetch(`${API_BASE}/task/createTask`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(taskData)
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, data: result.data };
-      } else {
-        return { success: false, error: result.message || 'Failed to create task' };
-      }
-    } catch (error) {
-      console.error('Error creating task:', error);
-      return { success: false, error: 'Network error' };
-    }
+  createTask: async (taskData) => {
+    const result = await apiService.post(API_ENDPOINTS.TASK.CREATE, taskData);
+    return result;
   },
 
-  // GET /api/v1/task/allTask - Get all tasks for the user
-  getAllTasks: async (token) => {
-    try {
-      const response = await fetch(`${API_BASE}/task/allTask`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+  getAllTasks: async () => {
+    const result = await apiService.get(API_ENDPOINTS.TASK.GET_ALL);
+    
+    if (result.success) {
+      const tasks = Array.isArray(result.data?.message) 
+        ? result.data.message.map(task => ({
+            _id: task._id || task.id,
+            id: task._id || task.id,
+            userId: task.userId,
+            title: task.title,
+            description: task.description,
+            isCompleted: task.isCompleted,
+            date: task.date,
+            createdAt: task.createdAt,
+            updatedAt: task.updatedAt,
+          }))
+        : result.data?.data || [];
       
-      const result = await response.json();
-      if (response.ok) {
-        // Map tasks from result.message and normalize fields for dashboard
-        const tasks = Array.isArray(result.message) ? result.message.map(task => ({
-          _id: task._id || task.id,
-          id: task._id || task.id,
-          userId: task.userId,
-          title: task.title,
-          description: task.description,
-          isCompleted: task.isCompleted,
-          date: task.date,
-          createdAt: task.createdAt,
-          updatedAt: task.updatedAt
-        })) : [];
-        return { success: true, data: tasks };
-      } else {
-        return { success: false, error: result.message || 'Failed to fetch tasks' };
-      }
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-      return { success: false, error: 'Network error' };
+      return { success: true, data: tasks };
     }
+    
+    return result;
   },
 
-  // GET /api/v1/task/:id - Get a specific task by ID
-  getTaskById: async (token, taskId) => {
-    try {
-      const response = await fetch(`${API_BASE}/task/${taskId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, data: result.data };
-      } else {
-        return { success: false, error: result.message || 'Failed to fetch task' };
-      }
-    } catch (error) {
-      console.error('Error fetching task:', error);
-      return { success: false, error: 'Network error' };
-    }
+  getTaskById: async (taskId) => {
+    const result = await apiService.get(API_ENDPOINTS.TASK.GET_BY_ID(taskId));
+    return result;
   },
 
-  // PUT /api/v1/task/update/:id - Update a task
-  updateTask: async (token, taskId, updateData) => {
-    try {
-      const response = await fetch(`${API_BASE}/task/update/${taskId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updateData)
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, data: result.data };
-      } else {
-        return { success: false, error: result.message || 'Failed to update task' };
-      }
-    } catch (error) {
-      console.error('Error updating task:', error);
-      return { success: false, error: 'Network error' };
-    }
+  updateTask: async (taskId, updateData) => {
+    const result = await apiService.put(
+      API_ENDPOINTS.TASK.UPDATE(taskId),
+      updateData
+    );
+    return result;
   },
 
-  // DELETE /api/v1/task/delete/:id - Delete a task
-  deleteTask: async (token, taskId) => {
-    try {
-      const response = await fetch(`${API_BASE}/task/delete/${taskId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, data: result.data };
-      } else {
-        return { success: false, error: result.message || 'Failed to delete task' };
-      }
-    } catch (error) {
-      console.error('Error deleting task:', error);
-      return { success: false, error: 'Network error' };
-    }
+  deleteTask: async (taskId) => {
+    const result = await apiService.delete(API_ENDPOINTS.TASK.DELETE(taskId));
+    return result;
   },
 
-  // PUT /api/v1/task/complete/:id - Mark task as complete/incomplete
-  markTaskComplete: async (token, taskId, isCompleted = true) => {
-    try {
-      const response = await fetch(`${API_BASE}/task/complete/${taskId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ isCompleted })
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        return { success: true, data: result.data };
-      } else {
-        return { success: false, error: result.message || 'Failed to mark task complete' };
-      }
-    } catch (error) {
-      console.error('Error marking task complete:', error);
-      return { success: false, error: 'Network error' };
-    }
-  }
+  markTaskComplete: async (taskId, isCompleted = true) => {
+    const result = await apiService.put(
+      API_ENDPOINTS.TASK.MARK_COMPLETE(taskId),
+      { isCompleted }
+    );
+    return result;
+  },
 };
 
 export default taskService;

@@ -1,55 +1,65 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, Container } from '@mui/material';
-import { Mosque } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Box, Container, Avatar, IconButton, useMediaQuery, useTheme } from '@mui/material';
+import { Mosque, Menu as MenuIcon } from '@mui/icons-material';
+import { colors, gradients, shadows, commonStyles } from '../styles';
 
 // Header Component
-const Header = ({ onLoginClick, onRegisterClick }) => {
+const Header = () => {
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <AppBar 
       
       sx={{ 
-        background: 'linear-gradient(135deg, #0f766e 0%, #115e59 100%)',
-        boxShadow: '0 4px 20px rgba(15, 118, 110, 0.3)',
-
+        backgroundColor: 'rgba(248, 250, 252, 0.95)',
+        backdropFilter: 'blur(10px)',
+        boxShadow: shadows.md
       }}
     >
       <Container maxWidth="xl">
-        <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box
+        <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.5, sm: 1 }, minHeight: { xs: 56, sm: 64 } }}>
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: { xs: 1, sm: 2 }, 
+              cursor: 'pointer' 
+            }} 
+            onClick={() => navigate('/')}
+          >
+            <Avatar
               sx={{
-                width: 48,
-                height: 48,
-                background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
-                borderRadius: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(20, 184, 166, 0.4)',
-                
+                ...commonStyles.avatarGradient,
+                width: { xs: 36, sm: 48 },
+                height: { xs: 36, sm: 48 }
               }}
             >
-              <Mosque sx={{ color: 'white', fontSize: 28 }} />
-            </Box>
-            <Box>
+              <Mosque sx={{ fontSize: { xs: 20, sm: 28 }, color: 'white' }} />
+            </Avatar>
+            <Box sx={{ display: { xs: 'block', sm: 'block' } }}>
               <Typography 
                 variant="h5" 
                 component="h1" 
                 sx={{ 
                   fontWeight: 'bold',
-                  color: 'white',
+                  color: colors.text.primary,
                   fontFamily: 'Inter, sans-serif',
-                  
+                  fontSize: { xs: '1.1rem', sm: '1.5rem' }
                 }}
               >
-                Habit<span style={{ color: '#5eead4' }}>Haven</span>
+                Habit<span style={{ color: colors.primary.main }}>Haven</span>
               </Typography>
               <Typography 
                 variant="caption" 
                 sx={{ 
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  fontSize: '0.75rem',
-                  mt: -0.5
+                  color: colors.text.secondary,
+                  fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                  mt: -0.5,
+                  display: { xs: 'none', sm: 'block' }
                 }}
               >
                 Spiritual Growth & Productivity
@@ -57,46 +67,48 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
             </Box>
           </Box>
           
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 } }}>
             <Button
-              onClick={onLoginClick}
+              onClick={() => navigate('/login')}
               sx={{
-                color: 'white',
+                color: colors.text.primary,
                 textTransform: 'none',
-                fontSize: '1rem',
+                fontSize: { xs: '0.85rem', sm: '1rem' },
                 fontWeight: 500,
-                px: 3,
-                py: 1,
+                px: { xs: 1.5, sm: 3 },
+                py: { xs: 0.5, sm: 1 },
                 borderRadius: 2,
+                minWidth: { xs: 'auto', sm: 'auto' },
                 '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                  backgroundColor: 'rgba(2, 132, 199, 0.05)'
                 }
               }}
             >
-              Sign In
+              {isMobile ? 'Sign In' : 'Sign In'}
             </Button>
             <Button
-              onClick={onRegisterClick}
+              onClick={() => navigate('/register')}
               variant="contained"
               sx={{
-                backgroundColor: '#14b8a6',
+                backgroundColor: colors.primary.main,
                 color: 'white',
                 textTransform: 'none',
-                fontSize: '1rem',
+                fontSize: { xs: '0.85rem', sm: '1rem' },
                 fontWeight: 600,
-                px: 4,
-                py: 1.5,
-                borderRadius: 3,
-                boxShadow: '0 4px 12px rgba(20, 184, 166, 0.4)',
+                px: { xs: 2, sm: 4 },
+                py: { xs: 0.75, sm: 1.5 },
+                borderRadius: { xs: 2, sm: 3 },
+                boxShadow: shadows.medium,
+                minWidth: { xs: 'auto', sm: 'auto' },
                 '&:hover': {
-                  backgroundColor: '#0f766e',
+                  backgroundColor: colors.primary.dark,
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 6px 20px rgba(20, 184, 166, 0.5)'
+                  boxShadow: shadows.large
                 },
                 transition: 'all 0.3s ease'
               }}
             >
-              Get Started
+              {isMobile ? 'Start' : 'Get Started'}
             </Button>
           </Box>
         </Toolbar>

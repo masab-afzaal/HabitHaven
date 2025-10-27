@@ -62,7 +62,7 @@ const GroupComponent = () => {
   // Fetch all groups
   const fetchAllGroups = async () => {
     try {
-      const result = await groupService.getAllGroups(token);
+      const result = await groupService.getAllGroups();
       if (result.success) {
         setAllGroups(result.data);
         setFilteredGroups(result.data);
@@ -78,7 +78,7 @@ const GroupComponent = () => {
   // Fetch user's groups
   const fetchMyGroups = async () => {
     try {
-      const result = await groupService.getMyGroups(token);
+      const result = await groupService.getMyGroups();
       if (result.success) {
         setMyGroups(result.data);
       } else {
@@ -142,19 +142,21 @@ const GroupComponent = () => {
     }
 
     setCreateLoading(true);
+    setError(''); // Clear previous errors
     try {
-      const result = await groupService.createGroup(token, formData);
+      const result = await groupService.createGroup(formData);
+      
       if (result.success) {
         setOpenCreateDialog(false);
         setFormData({ name: '', description: '' });
         await Promise.all([fetchAllGroups(), fetchMyGroups()]);
         setError('');
       } else {
-        setError(result.error);
+        setError(result.error || 'Failed to create group');
       }
     } catch (error) {
       console.error('Error creating group:', error);
-      setError('Failed to create group');
+      setError(error.message || 'Failed to create group');
     } finally {
       setCreateLoading(false);
     }
@@ -163,7 +165,7 @@ const GroupComponent = () => {
   // Join group
   const handleJoinGroup = async (groupId) => {
     try {
-      const result = await groupService.joinGroup(token, groupId);
+      const result = await groupService.joinGroup(groupId);
       if (result.success) {
         await Promise.all([fetchAllGroups(), fetchMyGroups()]);
         setError('');
@@ -195,7 +197,7 @@ const GroupComponent = () => {
 
   return (
     <Box>
-      {/* Header Section */}
+      
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
@@ -220,14 +222,14 @@ const GroupComponent = () => {
         </Typography>
       </Box>
 
-      {/* Error Alert */}
+      
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>
           {error}
         </Alert>
       )}
 
-      {/* Tabs */}
+      
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
           <Button
@@ -246,7 +248,7 @@ const GroupComponent = () => {
           </Button>
         </Box>
 
-        {/* Search Bar for Discover tab */}
+        
         {activeTab === 'discover' && (
           <TextField
             fullWidth
@@ -261,7 +263,7 @@ const GroupComponent = () => {
         )}
       </Box>
 
-      {/* Groups Grid */}
+      
       <Grid container spacing={3}>
         {activeTab === 'discover' && (
           <>
@@ -447,7 +449,7 @@ const GroupComponent = () => {
         )}
       </Grid>
 
-      {/* Floating Action Button to Create Group */}
+      
       <Fab
         color="primary"
         aria-label="create group"
@@ -457,7 +459,7 @@ const GroupComponent = () => {
         <AddIcon />
       </Fab>
 
-      {/* Create Group Dialog */}
+      
       <Dialog 
         open={openCreateDialog} 
         onClose={() => setOpenCreateDialog(false)}
@@ -473,6 +475,11 @@ const GroupComponent = () => {
           </Box>
         </DialogTitle>
         <DialogContent>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError('')}>
+              {error}
+            </Alert>
+          )}
           <TextField
             autoFocus
             margin="dense"
