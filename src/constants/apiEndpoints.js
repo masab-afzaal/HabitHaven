@@ -32,6 +32,14 @@ export const API_ENDPOINTS = {
     GET_TIMES: '/prayer/prayer-times',
     GET_BY_LOCATION: '/prayer/by-location',
   },
+  
+  CHALLENGE: {
+    CREATE: '/challenge/create',
+    JOIN: (id) => `/challenge/join/${id}`,
+    UPDATE_PROGRESS: (id) => `/challenge/${id}/progress`,
+    GET_MY_CHALLENGES: '/challenge/my-challenges',
+    GET_DETAILS: (id) => `/challenge/${id}/detail`,
+  },
 };
 
 export default API_ENDPOINTS;

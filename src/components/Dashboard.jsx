@@ -49,6 +49,7 @@ import { useAuth } from '../context/AuthContext';
 import PrayerComponent from './PrayerComponent';
 import TaskComponent from './TaskComponent';
 import GroupComponent from './GroupComponent';
+import ChallengeComponent from './ChallengeComponent';
 import { colors, gradients, shadows, commonStyles } from '../styles';
 
 const Dashboard = () => {
@@ -198,7 +199,7 @@ const Dashboard = () => {
       case 'groups':
         return <GroupComponent />;
       case 'challenges':
-        return <ChallengesTab />;
+        return <ChallengeComponent />;
       case 'settings':
         return <SettingsTab />;
       default:
@@ -494,25 +495,6 @@ const Dashboard = () => {
               </Box>
             )}
           </CardContent>
-        </Card>
-      </Box>
-    );
-  };
-
-  // Challenges Tab Component
-  const ChallengesTab = () => {
-    return (
-      <Box>
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: colors.text.primary }}>
-          Challenges
-        </Typography>
-        <Card sx={{ ...commonStyles.frostedGlassCard, p: 4, textAlign: 'center' }}>
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-            Coming Soon
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Challenge features are under development...
-          </Typography>
         </Card>
       </Box>
     );
