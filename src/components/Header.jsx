@@ -67,24 +67,104 @@ const Header = () => {
             </Box>
           </Box>
           
-          <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 } }}>
+          {/* Navigation Links - Middle Section */}
+          <Box 
+            sx={{ 
+              display: { xs: 'none', md: 'flex' }, 
+              gap: 1,
+              alignItems: 'center',
+              flex: 1,
+              justifyContent: 'center'
+            }}
+          >
             <Button
-              onClick={() => navigate('/login')}
+              onClick={() => {
+                const element = document.getElementById('features');
+                element?.scrollIntoView({ behavior: 'smooth' });
+              }}
               sx={{
                 color: colors.text.primary,
                 textTransform: 'none',
-                fontSize: { xs: '0.85rem', sm: '1rem' },
+                fontSize: '0.95rem',
                 fontWeight: 500,
-                px: { xs: 1.5, sm: 3 },
-                py: { xs: 0.5, sm: 1 },
-                borderRadius: 2,
-                minWidth: { xs: 'auto', sm: 'auto' },
+                px: 2,
+                py: 1,
                 '&:hover': {
-                  backgroundColor: 'rgba(2, 132, 199, 0.05)'
-                }
+                  backgroundColor: 'rgba(2, 132, 199, 0.08)',
+                  color: colors.primary.main
+                },
+                transition: 'all 0.3s ease'
               }}
             >
-              {isMobile ? 'Sign In' : 'Sign In'}
+              Features
+            </Button>
+            <Button
+              onClick={() => {
+                const element = document.getElementById('about');
+                element?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              sx={{
+                color: colors.text.primary,
+                textTransform: 'none',
+                fontSize: '0.95rem',
+                fontWeight: 500,
+                px: 2,
+                py: 1,
+                '&:hover': {
+                  backgroundColor: 'rgba(2, 132, 199, 0.08)',
+                  color: colors.primary.main
+                },
+                transition: 'all 0.3s ease'
+              }}
+            >
+              About
+            </Button>
+            <Button
+              onClick={() => {
+                const element = document.getElementById('contact');
+                element?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              sx={{
+                color: colors.text.primary,
+                textTransform: 'none',
+                fontSize: '0.95rem',
+                fontWeight: 500,
+                px: 2,
+                py: 1,
+                '&:hover': {
+                  backgroundColor: 'rgba(2, 132, 199, 0.08)',
+                  color: colors.primary.main
+                },
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Contact
+            </Button>
+          </Box>
+          
+          <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, alignItems: 'center' }}>
+            <Button
+              onClick={() => navigate('/login')}
+              variant="outlined"
+              sx={{
+                color: colors.primary.main,
+                borderColor: colors.primary.main,
+                textTransform: 'none',
+                fontSize: { xs: '0.85rem', sm: '1rem' },
+                fontWeight: 600,
+                px: { xs: 2, sm: 3 },
+                py: { xs: 0.75, sm: 1 },
+                borderRadius: 2,
+                border: `2px solid ${colors.primary.main}`,
+                '&:hover': {
+                  backgroundColor: 'rgba(2, 132, 199, 0.08)',
+                  borderColor: colors.primary.dark,
+                  border: `2px solid ${colors.primary.dark}`
+                },
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Sign In
             </Button>
             <Button
               onClick={() => navigate('/register')}
@@ -96,10 +176,9 @@ const Header = () => {
                 fontSize: { xs: '0.85rem', sm: '1rem' },
                 fontWeight: 600,
                 px: { xs: 2, sm: 4 },
-                py: { xs: 0.75, sm: 1.5 },
-                borderRadius: { xs: 2, sm: 3 },
+                py: { xs: 0.75, sm: 1 },
+                borderRadius: 2,
                 boxShadow: shadows.medium,
-                minWidth: { xs: 'auto', sm: 'auto' },
                 '&:hover': {
                   backgroundColor: colors.primary.dark,
                   transform: 'translateY(-2px)',

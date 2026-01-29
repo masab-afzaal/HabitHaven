@@ -36,10 +36,12 @@ import {
   AdminPanelSettings,
   CalendarMonth,
   Star,
-  Groups
+  Groups,
+  ExitToApp
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { groupService } from '../services/groupService';
+import { colors, gradients, shadows, commonStyles } from '../styles';
 
 const GroupComponent = () => {
   const { token, user } = useAuth();
@@ -58,6 +60,12 @@ const GroupComponent = () => {
     name: '',
     description: ''
   });
+  
+  // Members dialog states
+  const [openMembersDialog, setOpenMembersDialog] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [membersLoading, setMembersLoading] = useState(false);
 
   // Fetch all groups
   const fetchAllGroups = async () => {
@@ -178,9 +186,54 @@ const GroupComponent = () => {
     }
   };
 
+  // Leave group
+  const handleLeaveGroup = async (groupId) => {
+    if (!window.confirm('Are you sure you want to leave this group?')) {
+      return;
+    }
+    
+    try {
+      const result = await groupService.leaveGroup(groupId);
+      if (result.success) {
+        await Promise.all([fetchAllGroups(), fetchMyGroups()]);
+        setError('');
+      } else {
+        setError(result.error);
+      }
+    } catch (error) {
+      console.error('Error leaving group:', error);
+      setError('Failed to leave group');
+    }
+  };
+
   // Check if user is member of a group
   const isGroupMember = (groupId) => {
     return myGroups.some(group => group._id === groupId || group.groupId === groupId);
+  };
+
+  // View group members
+  const handleViewMembers = async (group) => {
+    setSelectedGroup(group);
+    setOpenMembersDialog(true);
+    setMembersLoading(true);
+    setGroupMembers([]); // Reset to empty array
+    
+    try {
+      const result = await groupService.getGroupMembers(group._id);
+      if (result.success) {
+        const members = result.data || [];
+        setGroupMembers(Array.isArray(members) ? members : []);
+      } else {
+        setError(result.error || 'Failed to load members');
+        setGroupMembers([]);
+      }
+    } catch (error) {
+      console.error('Error fetching members:', error);
+      setError('Failed to load group members');
+      setGroupMembers([]);
+    } finally {
+      setMembersLoading(false);
+    }
   };
 
   // Loading state
@@ -199,25 +252,40 @@ const GroupComponent = () => {
     <Box>
       
       <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 2 }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', color: colors.text.primary }}>
             Groups
           </Typography>
-          <Button
-            onClick={() => Promise.all([fetchAllGroups(), fetchMyGroups()])}
-            startIcon={<Refresh />}
-            variant="outlined"
-            disabled={loading}
-            sx={{ 
-              borderColor: 'primary.main', 
-              color: 'primary.main',
-              '&:hover': { borderColor: 'primary.dark', backgroundColor: 'primary.50' }
-            }}
-          >
-            {loading ? 'Loading...' : 'Refresh'}
-          </Button>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              onClick={() => Promise.all([fetchAllGroups(), fetchMyGroups()])}
+              startIcon={<Refresh />}
+              variant="outlined"
+              disabled={loading}
+              sx={{ 
+                borderColor: 'primary.main', 
+                color: 'primary.main',
+                borderWidth: 2,
+                '&:hover': { 
+                  borderColor: 'primary.dark', 
+                  backgroundColor: 'primary.50',
+                  borderWidth: 2
+                }
+              }}
+            >
+              Refresh
+            </Button>
+            <Button
+              onClick={() => setOpenCreateDialog(true)}
+              startIcon={<AddIcon />}
+              variant="contained"
+              disabled={loading}
+            >
+              Create Group
+            </Button>
+          </Box>
         </Box>
-        <Typography variant="h6" color="text.secondary">
+        <Typography variant="body1" color="text.secondary">
           Connect with like-minded people on your spiritual journey
         </Typography>
       </Box>
@@ -327,6 +395,8 @@ const GroupComponent = () => {
                           label={`${group.memberCount || 0} members`}
                           size="small"
                           variant="outlined"
+                          onClick={() => handleViewMembers(group)}
+                          sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'action.hover' } }}
                         />
                         
                         {isGroupMember(group._id) ? (
@@ -394,7 +464,7 @@ const GroupComponent = () => {
                   >
                     <CardContent>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <Badge
+                        {/* <Badge
                           badgeContent={<Star sx={{ fontSize: 12 }} />}
                           color="success"
                         >
@@ -408,7 +478,7 @@ const GroupComponent = () => {
                           >
                             <GroupsIcon />
                           </Avatar>
-                        </Badge>
+                        </Badge> */}
                         <Box sx={{ flexGrow: 1 }}>
                           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                             {group.name}
@@ -423,22 +493,36 @@ const GroupComponent = () => {
                         {group.description || 'No description available'}
                       </Typography>
 
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
                         <Chip
                           icon={<People />}
                           label={`${group.memberCount || 0} members`}
                           size="small"
                           variant="outlined"
                           color="success"
+                          onClick={() => handleViewMembers(group)}
+                          sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'action.hover' } }}
                         />
                         
-                        <Chip
-                          icon={<Star />}
-                          label="Member"
-                          size="small"
-                          color="success"
-                          variant="filled"
-                        />
+                        {group.createdBy === user?._id ? (
+                          <Chip
+                            icon={<AdminPanelSettings />}
+                            label="Creator"
+                            size="small"
+                            color="primary"
+                            variant="filled"
+                          />
+                        ) : (
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            color="error"
+                            startIcon={<ExitToApp />}
+                            onClick={() => handleLeaveGroup(group._id)}
+                          >
+                            Leave
+                          </Button>
+                        )}
                       </Box>
                     </CardContent>
                   </Card>
@@ -518,6 +602,95 @@ const GroupComponent = () => {
             disabled={createLoading || !formData.name.trim()}
           >
             {createLoading ? 'Creating...' : 'Create Group'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Members Dialog */}
+      <Dialog 
+        open={openMembersDialog} 
+        onClose={() => setOpenMembersDialog(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box>
+              <Typography variant="h6">{selectedGroup?.name}</Typography>
+              <Typography variant="caption" color="text.secondary">
+                Group Members
+              </Typography>
+            </Box>
+            <IconButton onClick={() => setOpenMembersDialog(false)}>
+              <Close />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {membersLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : groupMembers.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <People sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+              <Typography variant="body1" color="text.secondary">
+                No members found
+              </Typography>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {Array.isArray(groupMembers) && groupMembers.map((member, index) => (
+                <Paper 
+                  key={member._id || index}
+                  sx={{ 
+                    p: 2, 
+                    display: 'flex', 
+                    alignItems: 'center',
+                    '&:hover': {
+                      backgroundColor: 'action.hover'
+                    }
+                  }}
+                >
+                  <Avatar 
+                    src={member.userId?.avatar}
+                    sx={{ 
+                      width: 48, 
+                      height: 48, 
+                      mr: 2,
+                      bgcolor: 'primary.main'
+                    }}
+                  >
+                    {member.userId?.fullName?.[0]?.toUpperCase() || 'U'}
+                  </Avatar>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                      {member.userId?.fullName || 'Unknown User'}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      @{member.userId?.username || 'unknown'}
+                    </Typography>
+                    <Typography variant="caption" display="block" color="text.secondary">
+                      Joined {new Date(member.joinedAt || member.createdAt).toLocaleDateString()}
+                    </Typography>
+                  </Box>
+                  {selectedGroup?.createdBy === member.userId?._id && (
+                    <Chip 
+                      icon={<AdminPanelSettings />}
+                      label="Creator" 
+                      size="small" 
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
+                </Paper>
+              ))}
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenMembersDialog(false)}>
+            Close
           </Button>
         </DialogActions>
       </Dialog>

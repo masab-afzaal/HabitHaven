@@ -426,6 +426,9 @@ if (loading) {
                           backgroundColor: prayer.isCompleted ? `${config.color}15` : 'white',
                           cursor: prayer.isCompleted ? 'default' : 'pointer',
                           transition: 'all 0.3s ease',
+                          height: '100%',
+                          display: 'flex',
+                          flexDirection: 'column',
                           '&:hover': {
                             transform: prayer.isCompleted ? 'none' : 'translateY(-2px)',
                             boxShadow: prayer.isCompleted ? 'none' : '0 4px 12px rgba(0,0,0,0.15)'
@@ -433,7 +436,7 @@ if (loading) {
                         }}
                         onClick={() => togglePrayerStatus(prayer._id)}
                       >
-                        <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                        <CardContent sx={{ textAlign: 'center', py: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                           <Box sx={{ position: 'relative', display: 'inline-block' }}>
                             <Avatar
                               sx={{

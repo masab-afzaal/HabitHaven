@@ -20,9 +20,11 @@ export const API_ENDPOINTS = {
   GROUP: {
     CREATE: '/group/createGroup',
     JOIN: (id) => `/group/${id}/join`,
+    LEAVE: (id) => `/group/${id}/leave`,
     GET_ALL: '/group/allGroups',
     GET_MY_GROUPS: '/group/myGroups',
     GET_BY_ID: (id) => `/group/${id}`,
+    GET_MEMBERS: (id) => `/group/${id}/members`,
   },
   
   PRAYER: {
@@ -35,6 +37,7 @@ export const API_ENDPOINTS = {
   
   CHALLENGE: {
     CREATE: '/challenge/create',
+    GET_ALL: '/challenge/all',
     JOIN: (id) => `/challenge/join/${id}`,
     UPDATE_PROGRESS: (id) => `/challenge/${id}/progress`,
     GET_MY_CHALLENGES: '/challenge/my-challenges',

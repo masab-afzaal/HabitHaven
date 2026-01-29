@@ -25,7 +25,9 @@ import {
   Avatar,
   Fab,
   FormControlLabel,
-  Switch
+  Switch,
+  Tabs,
+  Tab
 } from '@mui/material';
 import {
   EmojiEvents as TrophyIcon,
@@ -39,7 +41,8 @@ import {
   Flag,
   Close,
   Timer,
-  Person
+  Person,
+  ExploreOutlined
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { challengeService } from '../services/challengeService';
@@ -50,9 +53,11 @@ const ChallengeComponent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [myChallenges, setMyChallenges] = useState([]);
+  const [allChallenges, setAllChallenges] = useState([]);
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [challengeDetails, setChallengeDetails] = useState(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
+  const [currentTab, setCurrentTab] = useState(0);
   
   // Dialog states
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -94,6 +99,56 @@ const ChallengeComponent = () => {
       setMyChallenges([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch all available challenges
+  const fetchAllChallenges = async () => {
+    setLoading(true);
+    try {
+      const result = await challengeService.getAllChallenges({ status: 'active' });
+      if (result.success) {
+        const challenges = result.data || [];
+        setAllChallenges(challenges);
+        setError('');
+      } else {
+        setError(result.error);
+        setAllChallenges([]);
+      }
+    } catch (error) {
+      console.error('Error fetching all challenges:', error);
+      setError('Failed to fetch all challenges');
+      setAllChallenges([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle tab change
+  const handleTabChange = (event, newValue) => {
+    setCurrentTab(newValue);
+    setError('');
+    if (newValue === 0) {
+      fetchMyChallenges();
+    } else {
+      fetchAllChallenges();
+    }
+  };
+
+  // Join a challenge
+  const handleJoinChallenge = async (challengeId) => {
+    try {
+      const result = await challengeService.joinChallenge(challengeId);
+      if (result.success) {
+        setError('');
+        await fetchAllChallenges();
+        await fetchMyChallenges();
+      } else {
+        setError(result.error || 'Failed to join challenge');
+      }
+    } catch (error) {
+      console.error('Error joining challenge:', error);
+      setError('Failed to join challenge');
     }
   };
 
@@ -181,12 +236,14 @@ const ChallengeComponent = () => {
 
   // View challenge details
   const handleViewDetails = async (challenge) => {
+    // Handle different data structures for my challenges vs all challenges
+    const challengeId = challenge.challengeId?._id || challenge._id;
     setSelectedChallenge(challenge);
     setOpenDetailsDialog(true);
     setDetailsLoading(true);
     
     try {
-      const result = await challengeService.getChallengeDetails(challenge.challengeId._id);
+      const result = await challengeService.getChallengeDetails(challengeId);
       if (result.success) {
         setChallengeDetails(result.data.message || result.data.data);
       } else {
@@ -248,7 +305,7 @@ const ChallengeComponent = () => {
           </Typography>
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Button
-              onClick={fetchMyChallenges}
+              onClick={() => currentTab === 0 ? fetchMyChallenges() : fetchAllChallenges()}
               startIcon={<Refresh />}
               variant="outlined"
               disabled={loading}
@@ -288,169 +345,181 @@ const ChallengeComponent = () => {
         </Alert>
       )}
 
-      {/* Stats Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ 
-            ...commonStyles.frostedGlassCard,
-            border: '2px solid #93c5fd',
-            '&:hover': {
-              transform: 'translateY(-4px)',
-              boxShadow: shadows.large,
-              transition: 'all 0.3s ease'
-            }
-          }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box>
-                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#2196f3' }}>
-                    {stats.total}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
-                    Total Challenges
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 2,
-                    background: 'linear-gradient(135deg, #2196f3, #1976d2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)'
-                  }}
-                >
-                  <TrophyIcon sx={{ fontSize: 32, color: 'white' }} />
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+      {/* Tabs */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+        <Tabs value={currentTab} onChange={handleTabChange}>
+          <Tab label="My Challenges" />
+          <Tab label="All Challenges" />
+        </Tabs>
+      </Box>
 
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ 
-            ...commonStyles.frostedGlassCard,
-            border: '2px solid #86efac',
-            '&:hover': {
-              transform: 'translateY(-4px)',
-              boxShadow: shadows.large,
-              transition: 'all 0.3s ease'
-            }
-          }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box>
-                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
-                    {stats.active}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
-                    Active
-                  </Typography>
+      {/* Stats Cards - Only for My Challenges Tab */}
+      {currentTab === 0 && (
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Card sx={{ 
+              ...commonStyles.frostedGlassCard,
+              border: '2px solid #93c5fd',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: shadows.large,
+                transition: 'all 0.3s ease'
+              }
+            }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#2196f3' }}>
+                      {stats.total}
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
+                      Total Challenges
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: 'linear-gradient(135deg, #2196f3, #1976d2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)'
+                    }}
+                  >
+                    <TrophyIcon sx={{ fontSize: 32, color: 'white' }} />
+                  </Box>
                 </Box>
-                <Box
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 2,
-                    background: 'linear-gradient(135deg, #4caf50, #388e3c)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)'
-                  }}
-                >
-                  <PlayArrow sx={{ fontSize: 32, color: 'white' }} />
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ 
-            ...commonStyles.frostedGlassCard,
-            border: '2px solid #fdba74',
-            '&:hover': {
-              transform: 'translateY(-4px)',
-              boxShadow: shadows.large,
-              transition: 'all 0.3s ease'
-            }
-          }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box>
-                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
-                    {stats.inProgress}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
-                    In Progress
-                  </Typography>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Card sx={{ 
+              ...commonStyles.frostedGlassCard,
+              border: '2px solid #86efac',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: shadows.large,
+                transition: 'all 0.3s ease'
+              }
+            }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                      {stats.active}
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
+                      Active
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: 'linear-gradient(135deg, #4caf50, #388e3c)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)'
+                    }}
+                  >
+                    <PlayArrow sx={{ fontSize: 32, color: 'white' }} />
+                  </Box>
                 </Box>
-                <Box
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 2,
-                    background: 'linear-gradient(135deg, #ff9800, #f57c00)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(255, 152, 0, 0.3)'
-                  }}
-                >
-                  <TrendingUp sx={{ fontSize: 32, color: 'white' }} />
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ 
-            ...commonStyles.frostedGlassCard,
-            border: '2px solid #d8b4fe',
-            '&:hover': {
-              transform: 'translateY(-4px)',
-              boxShadow: shadows.large,
-              transition: 'all 0.3s ease'
-            }
-          }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box>
-                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#9c27b0' }}>
-                    {stats.completed}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
-                    Completed
-                  </Typography>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Card sx={{ 
+              ...commonStyles.frostedGlassCard,
+              border: '2px solid #fdba74',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: shadows.large,
+                transition: 'all 0.3s ease'
+              }
+            }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
+                      {stats.inProgress}
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
+                      In Progress
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: 'linear-gradient(135deg, #ff9800, #f57c00)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(255, 152, 0, 0.3)'
+                    }}
+                  >
+                    <TrendingUp sx={{ fontSize: 32, color: 'white' }} />
+                  </Box>
                 </Box>
-                <Box
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 2,
-                    background: 'linear-gradient(135deg, #9c27b0, #7b1fa2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(156, 39, 176, 0.3)'
-                  }}
-                >
-                  <CheckCircle sx={{ fontSize: 32, color: 'white' }} />
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Card sx={{ 
+              ...commonStyles.frostedGlassCard,
+              border: '2px solid #d8b4fe',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: shadows.large,
+                transition: 'all 0.3s ease'
+              }
+            }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#9c27b0' }}>
+                      {stats.completed}
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: colors.text.primary, fontWeight: 500, mt: 1 }}>
+                      Completed
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 2,
+                      background: 'linear-gradient(135deg, #9c27b0, #7b1fa2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(156, 39, 176, 0.3)'
+                    }}
+                  >
+                    <CheckCircle sx={{ fontSize: 32, color: 'white' }} />
+                  </Box>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
 
       {/* Challenges List */}
       <Grid container spacing={3}>
-        {myChallenges.length === 0 ? (
-          <Grid item xs={12}>
+        {currentTab === 0 ? (
+          // My Challenges Tab
+          myChallenges.length === 0 ? (
+          <Grid size={{ xs: 12 }}>
             <Paper sx={{ p: 4, textAlign: 'center' }}>
               <TrophyIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
               <Typography variant="h6" sx={{ mb: 1 }}>
@@ -476,7 +545,7 @@ const ChallengeComponent = () => {
             );
 
             return (
-              <Grid item xs={12} sm={6} md={4} key={challenge._id}>
+              <Grid size={{ xs: 12, sm: 12, md: 6, lg: 4 }} key={challenge._id}>
                 <Card 
                   sx={{ 
                     height: '100%',
@@ -588,6 +657,136 @@ const ChallengeComponent = () => {
               </Grid>
             );
           })
+        )
+        ) : (
+          // All Challenges Tab
+          allChallenges.length === 0 ? (
+            <Grid size={{ xs: 12 }}>
+              <Paper sx={{ p: 4, textAlign: 'center' }}>
+                <ExploreOutlined sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  No challenges available
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  Be the first to create a challenge!
+                </Typography>
+                <Button
+                  variant="contained"
+                  onClick={() => setOpenCreateDialog(true)}
+                  startIcon={<AddIcon />}
+                >
+                  Create Challenge
+                </Button>
+              </Paper>
+            </Grid>
+          ) : (
+            allChallenges.map((challenge) => (
+              <Grid size={{ xs: 12, sm: 12, md: 6, lg: 4 }} key={challenge._id}>
+                <Card 
+                  sx={{ 
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'all 0.3s ease',
+                    border: '2px solid',
+                    borderColor: challenge.hasJoined ? '#2196f3' : challenge.status === 'active' ? '#4caf50' : '#e0e0e0',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
+                    }
+                  }}
+                >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
+                        {challenge.title || 'Untitled Challenge'}
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 0.5, flexDirection: 'column', alignItems: 'flex-end' }}>
+                        <Chip
+                          label={challenge.status || 'Active'}
+                          color={challenge.status === 'active' ? 'success' : 'default'}
+                          size="small"
+                        />
+                        {challenge.hasJoined && (
+                          <Chip
+                            label="Joined"
+                            color="primary"
+                            size="small"
+                          />
+                        )}
+                      </Box>
+                    </Box>
+
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2, minHeight: 40 }}>
+                      {challenge.description || 'No description'}
+                    </Typography>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}>
+                      <Flag fontSize="small" color="action" />
+                      <Typography variant="body2" color="text.secondary">
+                        <strong>Goal:</strong> {challenge.goal || 'No goal set'}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}>
+                      <Timer fontSize="small" color="action" />
+                      <Typography variant="body2" color="text.secondary">
+                        <strong>Duration:</strong> {challenge.totalDays} days
+                      </Typography>
+                    </Box>
+
+                    {challenge.isGroup && (
+                      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}>
+                        <Group fontSize="small" color="action" />
+                        <Typography variant="body2" color="text.secondary">
+                          Group Challenge • {challenge.participantCount || 0} participants
+                        </Typography>
+                      </Box>
+                    )}
+
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}>
+                      <Person fontSize="small" color="action" />
+                      <Typography variant="body2" color="text.secondary">
+                        Created by {challenge.createdBy?.fullName || challenge.createdBy?.username || 'Unknown'}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                      <CalendarToday fontSize="small" color="action" />
+                      <Typography variant="body2" color="text.secondary">
+                        Created {new Date(challenge.createdAt).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+
+                  <Divider />
+
+                  <Box sx={{ p: 2, display: 'flex', gap: 1 }}>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => handleViewDetails(challenge)}
+                      fullWidth
+                    >
+                      View Details
+                    </Button>
+                    {!challenge.hasJoined && challenge.status === 'active' && (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => handleJoinChallenge(challenge._id)}
+                        fullWidth
+                      >
+                        Join Challenge
+                      </Button>
+                    )}
+                  </Box>
+                </Card>
+              </Grid>
+            ))
+          )
         )}
       </Grid>
 
@@ -729,7 +928,7 @@ const ChallengeComponent = () => {
               </Typography>
 
               <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Paper sx={{ p: 2, textAlign: 'center' }}>
                     <Typography variant="h4" color="primary">
                       {challengeDetails.challenge?.totalDays}
@@ -739,7 +938,7 @@ const ChallengeComponent = () => {
                     </Typography>
                   </Paper>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Paper sx={{ p: 2, textAlign: 'center' }}>
                     <Typography variant="h4" color="success.main">
                       {challengeDetails.participants?.length || 0}

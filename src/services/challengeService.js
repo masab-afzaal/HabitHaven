@@ -7,6 +7,29 @@ export const challengeService = {
     return result;
   },
 
+  getAllChallenges: async (filters = {}) => {
+    const queryParams = new URLSearchParams();
+    if (filters.status) queryParams.append('status', filters.status);
+    if (filters.isGroup !== undefined) queryParams.append('isGroup', filters.isGroup);
+    
+    const url = `${API_ENDPOINTS.CHALLENGE.GET_ALL}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const result = await apiService.get(url);
+    
+    if (result.success) {
+      const challenges = result.data?.message || result.data?.data || [];
+      return { 
+        success: true, 
+        data: Array.isArray(challenges) ? challenges : [] 
+      };
+    }
+    
+    if (result.error?.includes('404') || result.error?.includes('not found')) {
+      return { success: true, data: [] };
+    }
+    
+    return result;
+  },
+
   joinChallenge: async (challengeId) => {
     if (!challengeId) {
       return { success: false, error: 'Challenge ID is required' };

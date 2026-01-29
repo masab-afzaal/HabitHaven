@@ -50,6 +50,7 @@ import PrayerComponent from './PrayerComponent';
 import TaskComponent from './TaskComponent';
 import GroupComponent from './GroupComponent';
 import ChallengeComponent from './ChallengeComponent';
+import SettingsComponent from './SettingsComponent';
 import { colors, gradients, shadows, commonStyles } from '../styles';
 
 const Dashboard = () => {
@@ -502,21 +503,7 @@ const Dashboard = () => {
 
   // Settings Tab Component
   const SettingsTab = () => {
-    return (
-      <Box>
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: colors.text.primary }}>
-          Settings
-        </Typography>
-        <Card sx={{ ...commonStyles.frostedGlassCard, p: 4, textAlign: 'center' }}>
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-            Coming Soon
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Settings panel is under development...
-          </Typography>
-        </Card>
-      </Box>
-    );
+    return <SettingsComponent />;
   };
 
   const menuItems = [

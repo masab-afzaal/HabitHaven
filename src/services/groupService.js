@@ -16,11 +16,20 @@ export const groupService = {
     return result;
   },
 
+  leaveGroup: async (groupId) => {
+    if (!groupId) {
+      return { success: false, error: 'Group ID is required' };
+    }
+    
+    const result = await apiService.post(API_ENDPOINTS.GROUP.LEAVE(groupId));
+    return result;
+  },
+
   getAllGroups: async () => {
     const result = await apiService.get(API_ENDPOINTS.GROUP.GET_ALL);
     
     if (result.success) {
-      const groups = result.data?.message || result.data?.data || [];
+      const groups = result.data?.data || [];
       return { 
         success: true, 
         data: Array.isArray(groups) ? groups : [] 
@@ -38,7 +47,7 @@ export const groupService = {
     const result = await apiService.get(API_ENDPOINTS.GROUP.GET_MY_GROUPS);
     
     if (result.success) {
-      const groups = result.data?.message || result.data?.data || [];
+      const groups = result.data?.data || [];
       return { 
         success: true, 
         data: Array.isArray(groups) ? groups : [] 
@@ -58,6 +67,24 @@ export const groupService = {
     }
     
     const result = await apiService.get(API_ENDPOINTS.GROUP.GET_BY_ID(groupId));
+    return result;
+  },
+
+  getGroupMembers: async (groupId) => {
+    if (!groupId) {
+      return { success: false, error: 'Group ID is required' };
+    }
+    
+    const result = await apiService.get(API_ENDPOINTS.GROUP.GET_MEMBERS(groupId));
+    
+    if (result.success) {
+      const members = result.data?.data || [];
+      return { 
+        success: true, 
+        data: Array.isArray(members) ? members : [] 
+      };
+    }
+    
     return result;
   },
 };
