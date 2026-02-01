@@ -52,6 +52,7 @@ import GroupComponent from './GroupComponent';
 import ChallengeComponent from './ChallengeComponent';
 import SettingsComponent from './SettingsComponent';
 import { colors, gradients, shadows, commonStyles } from '../styles';
+import API_CONFIG from '../config/api.config';
 
 const Dashboard = () => {
   const { user, logout, token } = useAuth();
@@ -66,7 +67,7 @@ const Dashboard = () => {
   const [openTaskDialog, setOpenTaskDialog] = useState(false);
   const [newTask, setNewTask] = useState({ title: '', description: '', date: '' });
 
-  const API_BASE = 'http://localhost:5000/api/v1';
+  const API_BASE = `${API_CONFIG.BASE_URL}${API_CONFIG.API_VERSION}`;
   const drawerWidth = 280;
 
   const fetchTasks = async () => {

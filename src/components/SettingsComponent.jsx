@@ -33,6 +33,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { settingsStyles } from '../styles/settingsStyles';
+import API_CONFIG from '../config/api.config';
 
 const SettingsComponent = ({ onBack }) => {
   const { user, token } = useAuth();
@@ -73,7 +74,7 @@ const SettingsComponent = ({ onBack }) => {
     fontSize: 'Medium'
   });
 
-  const API_BASE = 'http://localhost:5000/api/v1';
+  const API_BASE = `${API_CONFIG.BASE_URL}${API_CONFIG.API_VERSION}`;
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
