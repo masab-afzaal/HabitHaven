@@ -62,7 +62,7 @@ const Header = () => {
                   display: { xs: 'none', sm: 'block' }
                 }}
               >
-                Spiritual Growth & Productivity - testing
+                Spiritual Growth & Productivity
               </Typography>
             </Box>
           </Box>
