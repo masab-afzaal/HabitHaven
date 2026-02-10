@@ -19,13 +19,15 @@ jobs:
             set -e
             cd ${{ secrets.VPS_PATH }}
 
-            echo "== Pull latest frontend =="
-            git pull origin main
+            echo "== Force sync with GitHub =="
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
 
             echo "== Rebuild frontend container only =="
             cd ..
-            docker compose build frontend
-            docker compose up -d frontend
+            docker compose -f docker-compose.yaml build frontend
+            docker compose -f docker-compose.yaml up -d frontend
 
             echo "== Containers running =="
             docker ps
