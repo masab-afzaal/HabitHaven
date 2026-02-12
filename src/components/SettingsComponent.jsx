@@ -665,7 +665,7 @@ const SettingsComponent = ({ onBack }) => {
                       Language
                     </Typography>
                     <Typography variant="caption" color="text.secondary" gutterBottom>
-                      Choose your preferred language
+                      Choose your preferred language (Coming soon)
                     </Typography>
                     <TextField
                       select
@@ -688,7 +688,7 @@ const SettingsComponent = ({ onBack }) => {
                       Font Size
                     </Typography>
                     <Typography variant="caption" color="text.secondary" gutterBottom>
-                      Adjust text size for better readability
+                      Adjust text size for better readability (Coming soon)
                     </Typography>
                     <TextField
                       select
