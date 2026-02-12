@@ -1,94 +1,114 @@
 import { apiService } from '../api';
 import { API_ENDPOINTS } from '../constants';
 
+/**
+ * Digs through every possible shape that apiService might return
+ * and finds the leaderboard array.
+ *
+ * Raw API:  { statuscode, success, message: [...ARRAY], data: "string" }
+ * apiService might wrap this differently.
+ */
+const extractArray = (result) => {
+  console.log('🔍 RAW result from apiService:', JSON.stringify(result, null, 2));
+
+  const candidates = [
+    result?.data,
+    result?.message,
+    result?.data?.message,
+    result?.data?.data,
+    result?.message?.message,
+    result?.message?.data,
+    result,
+  ];
+
+  for (const c of candidates) {
+    if (Array.isArray(c)) {
+      console.log('✅ Found array with length:', c.length, c);
+      return c;
+    }
+  }
+
+  console.warn('⚠️ No array found anywhere in result, returning []');
+  return [];
+};
+
+/**
+ * Finds the challenge object (has _id + totalDays) in the result.
+ */
+const extractChallenge = (result) => {
+  console.log('🔍 RAW result from apiService (challenge):', JSON.stringify(result, null, 2));
+
+  const candidates = [
+    result?.data,
+    result?.message,
+    result?.data?.message,
+    result?.data?.data,
+    result?.message?.data,
+  ];
+
+  for (const c of candidates) {
+    if (c && typeof c === 'object' && !Array.isArray(c) && c._id) {
+      console.log('✅ Found challenge object:', c);
+      return c;
+    }
+  }
+
+  console.warn('⚠️ No challenge object found');
+  return null;
+};
+
 export const groupChallengeService = {
-  /**
-   * Create a new group challenge
-   * POST /groupChallenge/group-challenges
-   * Body: { title, description, goal, totalDays, groupId }
-   */
   createGroupChallenge: async (data) => {
     try {
-      console.log('Creating group challenge with data:', data);
+      console.log('📤 createGroupChallenge:', data);
       const result = await apiService.post(API_ENDPOINTS.GROUP_CHALLENGE.CREATE, data);
-      console.log('Create group challenge result:', result);
-      
+      console.log('📥 createGroupChallenge raw result:', JSON.stringify(result, null, 2));
+
       if (result.success) {
-        // API returns: { success: true, message: {...challengeData}, data: "..." }
-        return {
-          success: true,
-          data: result.message,
-          message: result.data
-        };
+        return { success: true, data: extractChallenge(result) };
       }
-      
       return result;
     } catch (error) {
-      console.error('Error creating group challenge:', error);
+      console.error('createGroupChallenge error:', error);
       return { success: false, error: error.message };
     }
   },
 
-  /**
-   * Update progress for current user (day-wise validation)
-   * PATCH /groupChallenge/group-challenges/:id/progress
-   */
   updateProgress: async (groupChallengeId) => {
-    if (!groupChallengeId) {
-      return { success: false, error: 'Group challenge ID is required' };
-    }
-
+    if (!groupChallengeId) return { success: false, error: 'Challenge ID required' };
     try {
-      console.log('Updating progress for challenge:', groupChallengeId);
-      const result = await apiService.patch(API_ENDPOINTS.GROUP_CHALLENGE.UPDATE_PROGRESS(groupChallengeId));
-      console.log('Update progress result:', result);
-      
-      if (result.success) {
-        return {
-          success: true,
-          data: result.message || result.data,
-          message: result.data || 'Progress updated successfully'
-        };
-      }
-      
-      return result;
+      console.log('📤 updateProgress:', groupChallengeId);
+      const result = await apiService.patch(
+        API_ENDPOINTS.GROUP_CHALLENGE.UPDATE_PROGRESS(groupChallengeId)
+      );
+      console.log('📥 updateProgress raw result:', JSON.stringify(result, null, 2));
+      return result.success
+        ? { success: true, data: result.message ?? result.data }
+        : result;
     } catch (error) {
-      console.error('Error updating progress:', error);
+      console.error('updateProgress error:', error);
       return { success: false, error: error.message };
     }
   },
 
-  /**
-   * Get leaderboard for a group challenge
-   * GET /groupChallenge/group-challenges/:id/leaderboard
-   * Returns: Array of user progress with rank
-   */
   getLeaderboard: async (groupChallengeId) => {
-    if (!groupChallengeId) {
-      return { success: false, error: 'Group challenge ID is required' };
-    }
-
+    if (!groupChallengeId) return { success: false, error: 'Challenge ID required', data: [] };
     try {
-      console.log('Fetching leaderboard for challenge:', groupChallengeId);
-      const result = await apiService.get(API_ENDPOINTS.GROUP_CHALLENGE.LEADERBOARD(groupChallengeId));
-      console.log('Leaderboard result:', result);
-      
+      console.log('📤 getLeaderboard for challenge ID:', groupChallengeId);
+      const result = await apiService.get(
+        API_ENDPOINTS.GROUP_CHALLENGE.LEADERBOARD(groupChallengeId)
+      );
+      console.log('📥 getLeaderboard raw result:', JSON.stringify(result, null, 2));
+
       if (result.success) {
-        // API returns: { success: true, message: [...leaderboard], data: "..." }
-        const leaderboardData = result.message || result.data || [];
-        console.log('Extracted leaderboard data:', leaderboardData);
-        
-        return {
-          success: true,
-          data: Array.isArray(leaderboardData) ? leaderboardData : [],
-          message: result.data
-        };
+        const arr = extractArray(result);
+        console.log('🏆 Final leaderboard array:', arr);
+        return { success: true, data: arr };
       }
-      
-      return result;
+      return { success: false, error: result.error || 'Failed', data: [] };
     } catch (error) {
-      console.error('Error fetching leaderboard:', error);
-      return { success: false, error: error.message };
+      console.error('getLeaderboard error:', error);
+      return { success: false, error: error.message, data: [] };
     }
   },
 };
