@@ -22,8 +22,9 @@ export const API_ENDPOINTS = {
     JOIN: (id) => `/group/${id}/join`,
     LEAVE: (id) => `/group/${id}/leave`,
     GET_ALL: '/group/allGroups',
-    GET_MY_GROUPS: '/group/myGroups',
+    GET_MY_GROUPS: '/group/getmyGroup',
     GET_BY_ID: (id) => `/group/${id}`,
+    GET_DETAILS: (id) => `/group/${id}/detail`,
     GET_MEMBERS: (id) => `/group/${id}/members`,
   },
   
@@ -42,6 +43,13 @@ export const API_ENDPOINTS = {
     UPDATE_PROGRESS: (id) => `/challenge/${id}/progress`,
     GET_MY_CHALLENGES: '/challenge/my-challenges',
     GET_DETAILS: (id) => `/challenge/${id}/detail`,
+  },
+  
+  // ✅ Updated GROUP_CHALLENGE endpoints to match your actual API
+  GROUP_CHALLENGE: {
+    CREATE: '/groupChallenge/group-challenges',
+    UPDATE_PROGRESS: (id) => `/groupChallenge/group-challenges/${id}/progress`,
+    LEADERBOARD: (id) => `/groupChallenge/group-challenges/${id}/leaderboard`,
   },
 };
 
