@@ -44,12 +44,14 @@ import {
   Person,
   ExploreOutlined
 } from '@mui/icons-material';
+import { useSnackbar } from '../context/SnackbarContext';
 import { useAuth } from '../context/AuthContext';
 import { challengeService } from '../services/challengeService';
 import { colors, gradients, shadows, commonStyles } from '../styles';
 
 const ChallengeComponent = () => {
   const { token, user } = useAuth();
+  const { showSuccess } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [myChallenges, setMyChallenges] = useState([]);
@@ -67,8 +69,7 @@ const ChallengeComponent = () => {
     title: '',
     description: '',
     goal: '',
-    totalDays: '',
-    isGroup: true
+    totalDays: ''
   });
 
   // Stats
@@ -140,6 +141,7 @@ const ChallengeComponent = () => {
     try {
       const result = await challengeService.joinChallenge(challengeId);
       if (result.success) {
+        showSuccess('Successfully joined challenge!');
         setError('');
         await fetchAllChallenges();
         await fetchMyChallenges();
@@ -203,8 +205,9 @@ const ChallengeComponent = () => {
       });
       
       if (result.success) {
+        showSuccess('Challenge created successfully!');
         setOpenCreateDialog(false);
-        setFormData({ title: '', description: '', goal: '', totalDays: '', isGroup: true });
+        setFormData({ title: '', description: '', goal: '', totalDays: '' });
         await fetchMyChallenges();
         setError('');
       } else {
@@ -223,6 +226,7 @@ const ChallengeComponent = () => {
     try {
       const result = await challengeService.updateProgress(challengeId);
       if (result.success) {
+        showSuccess('Progress updated successfully!');
         await fetchMyChallenges();
         setError('');
       } else {
@@ -871,17 +875,6 @@ const ChallengeComponent = () => {
             onChange={handleInputChange}
             inputProps={{ min: 1 }}
             sx={{ mb: 2 }}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={formData.isGroup}
-                onChange={handleInputChange}
-                name="isGroup"
-                color="primary"
-              />
-            }
-            label="Group Challenge (others can join)"
           />
         </DialogContent>
         <DialogActions>

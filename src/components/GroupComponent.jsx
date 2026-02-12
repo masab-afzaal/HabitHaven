@@ -10,6 +10,7 @@ import {
   People, AdminPanelSettings, Star, ExitToApp,
   EmojiEvents as TrophyIcon, CheckCircle
 } from '@mui/icons-material';
+import { useSnackbar } from '../context/SnackbarContext';
 import { useAuth } from '../context/AuthContext';
 import { groupService } from '../services/groupService';
 import { groupChallengeService } from '../services/groupChallengeService';
@@ -17,6 +18,7 @@ import { shadows } from '../styles';
 
 const GroupComponent = () => {
   const { token, user } = useAuth();
+  const { showSuccess } = useSnackbar();
 
   const [loading, setLoading]               = useState(true);
   const [error, setError]                   = useState('');
@@ -113,7 +115,7 @@ const GroupComponent = () => {
     try {
       const result = await groupService.createGroup(formData);
       if (result.success) {
-        alert('Group created successfully!');
+        showSuccess('Group created successfully!');
         setOpenCreateDialog(false);
         setFormData({ name: '', description: '' });
         await Promise.all([fetchAllGroups(), fetchMyGroups()]);
@@ -132,7 +134,7 @@ const GroupComponent = () => {
     try {
       const result = await groupService.joinGroup(groupId);
       if (result.success) {
-        alert('Group joined successfully!');
+        showSuccess('Group joined successfully!');
         setError('');
         await Promise.all([fetchAllGroups(), fetchMyGroups()]);
       } else {
@@ -149,7 +151,7 @@ const GroupComponent = () => {
     try {
       const result = await groupService.leaveGroup(groupId);
       if (result.success) {
-        alert('Left group successfully');
+        showSuccess('Left group successfully');
         setError('');
         setOpenDetailsDialog(false);
         await Promise.all([fetchAllGroups(), fetchMyGroups()]);
@@ -245,7 +247,7 @@ const GroupComponent = () => {
       console.log('✅ createGroupChallenge result:', JSON.stringify(result, null, 2));
 
       if (result.success) {
-        alert('Group challenge created successfully!');
+        showSuccess('Group challenge created successfully!');
         setOpenChallengeDialog(false);
         setChallengeForm({ title: '', description: '', goal: '', totalDays: '' });
 
@@ -275,7 +277,7 @@ const GroupComponent = () => {
     try {
       const result = await groupChallengeService.updateProgress(groupDetails.challenge._id);
       if (result.success) {
-        alert("Progress updated for today!");
+        showSuccess("Progress updated for today!");
         await handleViewDetails(selectedGroup);
       } else {
         setError(result.error || 'Failed to update progress');
@@ -380,30 +382,83 @@ const GroupComponent = () => {
             return (
               <Grid item xs={12} sm={6} md={4} key={groupId}>
                 <Card sx={{
-                  height: '100%', display: 'flex', flexDirection: 'column',
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column',
                   transition: 'all 0.3s ease',
-                  '&:hover': { transform: 'translateY(-4px)', boxShadow: shadows?.large || 8 }
+                  '&:hover': { 
+                    transform: 'translateY(-4px)', 
+                    boxShadow: shadows?.large || 8 
+                  }
                 }}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}><GroupsIcon /></Avatar>
-                      <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{groupObj.name || 'Unnamed Group'}</Typography>
+                  <CardContent sx={{ 
+                    flexGrow: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    p: 3 
+                  }}>
+                    {/* Header Section */}
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+                      <Avatar sx={{ bgcolor: 'primary.main', mr: 2, width: 48, height: 48 }}>
+                        <GroupsIcon />
+                      </Avatar>
+                      <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                        <Typography 
+                          variant="h6" 
+                          sx={{ 
+                            fontWeight: 'bold', 
+                            mb: 0.5,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical'
+                          }}
+                        >
+                          {groupObj.name || 'Unnamed Group'}
+                        </Typography>
                         <Typography variant="caption" color="text.secondary">
                           Created {groupObj.createdAt ? new Date(groupObj.createdAt).toLocaleDateString() : 'Unknown'}
                         </Typography>
                       </Box>
                     </Box>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2, minHeight: 40 }}>
-                      {groupObj.description || 'No description'}
+                    
+                    {/* Description Section */}
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary" 
+                      sx={{ 
+                        mb: 2, 
+                        flexGrow: 1,
+                        minHeight: 60,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical'
+                      }}
+                    >
+                      {groupObj.description || 'No description available for this group'}
                     </Typography>
-                    <Divider sx={{ my: 2 }} />
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Chip icon={<People />} label={`${groupObj.memberCount || 0} members`} size="small"
-                        onClick={() => handleViewDetails(group)} sx={{ cursor: 'pointer' }} />
+                    
+                    <Divider sx={{ mb: 2 }} />
+                    
+                    {/* Actions Section */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+                      <Chip 
+                        icon={<People />} 
+                        label={`${groupObj.memberCount || 0} members`} 
+                        size="small"
+                        onClick={() => handleViewDetails(group)} 
+                        sx={{ cursor: 'pointer' }} 
+                      />
                       {isMember
-                        ? <Button size="small" variant="outlined" onClick={() => handleViewDetails(group)}>View Details</Button>
-                        : <Button size="small" variant="contained" onClick={() => handleJoinGroup(groupId)}>Join</Button>
+                        ? <Button size="small" variant="outlined" onClick={() => handleViewDetails(group)}>
+                            View Details
+                          </Button>
+                        : <Button size="small" variant="contained" onClick={() => handleJoinGroup(groupId)}>
+                            Join
+                          </Button>
                       }
                     </Box>
                   </CardContent>
