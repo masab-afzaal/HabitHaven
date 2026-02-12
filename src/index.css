@@ -1,2 +1,42 @@
 @import "tailwindcss";
 
+/* Custom fonts for Islamic content */
+@font-face {
+  font-family: 'Jameel Noori Nastaleeq';
+  src: local('Jameel Noori Nastaleeq'), local('Noto Nastaliq Urdu');
+  font-display: swap;
+}
+
+/* Arabic Quran font styling - Amiri Quran style */
+.quran-arabic {
+  font-family: 'Amiri Quran', 'Lateef', serif;
+  font-feature-settings: 'kern' on, 'liga' on;
+  line-height: 2.4;
+  letter-spacing: 0.03em;
+  text-rendering: optimizeLegibility;
+  font-weight: 400;
+}
+
+/* Urdu Nastaleeq font styling */
+.urdu-nastaleeq {
+  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Urdu Typesetting', serif;
+  font-feature-settings: 'kern' on, 'liga' on;
+  line-height: 1.8;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* RTL support for Arabic and Urdu text */
+[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Ensure proper rendering on all browsers */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+

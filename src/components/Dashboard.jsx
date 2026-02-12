@@ -51,6 +51,8 @@ import TaskComponent from './TaskComponent';
 import GroupComponent from './GroupComponent';
 import ChallengeComponent from './ChallengeComponent';
 import SettingsComponent from './SettingsComponent';
+import QuranVerseCard from './QuranVerseCard';
+import HadithCard from './HadithCard';
 import { colors, gradients, shadows, commonStyles } from '../styles';
 import API_CONFIG from '../config/api.config';
 
@@ -419,6 +421,16 @@ const Dashboard = () => {
                 </Typography>
               </CardContent>
             </Card>
+          </Grid>
+        </Grid>
+
+        {/* Islamic Content Section - Quran & Hadith */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <QuranVerseCard />
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <HadithCard />
           </Grid>
         </Grid>
 

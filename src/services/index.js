@@ -4,3 +4,4 @@ export { default as groupService } from './groupService';
 export { default as prayerService } from './prayerService';
 export { default as authService } from './authService';
 export { default as challengeService } from './challengeService';
+export { islamicContentService } from './islamicContentService';
